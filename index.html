@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Muscle Atlas Pro | Expert Anatomy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <h2 class="logo">Muscle<span>Atlas</span></h2>
+            
+            <div class="anatomy-box">
+                <div class="view-container">
+                    <span>Front (Предна част)</span>
+                    <svg viewBox="0 0 200 350" class="human-body">
+                        <circle cx="100" cy="30" r="15" fill="#333" />
+                        <path id="chest" class="muscle-segment" d="M70,60 Q100,50 130,60 L130,100 Q100,110 70,100 Z" onclick="selectMuscle('chest')" />
+                        <path id="abs" class="muscle-segment" d="M75,105 L125,105 L120,170 L80,170 Z" onclick="selectMuscle('abs')" />
+                        <ellipse id="shoulders-fl" class="muscle-segment" cx="60" cy="70" rx="12" ry="15" onclick="selectMuscle('shoulders')" />
+                        <ellipse id="shoulders-fr" class="muscle-segment" cx="140" cy="70" rx="12" ry="15" onclick="selectMuscle('shoulders')" />
+                        <rect id="biceps-l" class="muscle-segment" x="45" y="85" width="15" height="50" rx="5" onclick="selectMuscle('biceps')" />
+                        <rect id="biceps-r" class="muscle-segment" x="140" y="85" width="15" height="50" rx="5" onclick="selectMuscle('biceps')" />
+                        <rect id="forearms-l" class="muscle-segment" x="42" y="140" width="12" height="45" rx="4" onclick="selectMuscle('forearms')" />
+                        <rect id="forearms-r" class="muscle-segment" x="146" y="140" width="12" height="45" rx="4" onclick="selectMuscle('forearms')" />
+                        <path id="quads-l" class="muscle-segment" d="M75,180 L98,180 L95,280 L70,280 Z" onclick="selectMuscle('quads')" />
+                        <path id="quads-r" class="muscle-segment" d="M102,180 L125,180 L130,280 L105,280 Z" onclick="selectMuscle('quads')" />
+                    </svg>
+                </div>
+
+                <div class="view-container">
+                    <span>Back (Задна част)</span>
+                    <svg viewBox="0 0 200 350" class="human-body">
+                        <circle cx="100" cy="30" r="15" fill="#333" />
+                        <path id="upperback" class="muscle-segment" d="M80,60 L120,60 L130,90 L70,90 Z" onclick="selectMuscle('upperback')" />
+                        <path id="lats-l" class="muscle-segment" d="M70,95 L95,95 L95,145 L65,145 Z" onclick="selectMuscle('lats')" />
+                        <path id="lats-r" class="muscle-segment" d="M105,95 L130,95 L135,145 L105,145 Z" onclick="selectMuscle('lats')" />
+                        <rect id="lowerback" class="muscle-segment" x="85" y="145" width="30" height="25" rx="2" onclick="selectMuscle('lowerback')" />
+                        
+                        <ellipse id="glutes-l" class="muscle-segment" cx="85" cy="185" rx="15" ry="20" onclick="selectMuscle('glutes')" />
+                        <ellipse id="glutes-r" class="muscle-segment" cx="115" cy="185" rx="15" ry="20" onclick="selectMuscle('glutes')" />
+                        <rect id="triceps-l" class="muscle-segment" x="45" y="85" width="15" height="60" rx="5" onclick="selectMuscle('triceps')" />
+                        <rect id="triceps-r" class="muscle-segment" x="140" y="85" width="15" height="60" rx="5" onclick="selectMuscle('triceps')" />
+                        <path id="hamstrings-l" class="muscle-segment" d="M75,210 L98,210 L95,290 L75,290 Z" onclick="selectMuscle('hamstrings')" />
+                        <path id="hamstrings-r" class="muscle-segment" d="M102,210 L125,210 L125,290 L105,290 Z" onclick="selectMuscle('hamstrings')" />
+                        <path id="calves-l" class="muscle-segment" d="M75,300 L95,300 L90,340 L80,340 Z" onclick="selectMuscle('calves')" />
+                        <path id="calves-r" class="muscle-segment" d="M105,300 L125,300 L120,340 L110,340 Z" onclick="selectMuscle('calves')" />
+                    </svg>
+                </div>
+            </div>
+
+            <nav class="muscle-list">
+                <button class="m-btn" onclick="selectMuscle('chest')">Chest (Гърди)</button>
+                <button class="m-btn" onclick="selectMuscle('upperback')">Upper Back (Горна част/Трапец)</button>
+                <button class="m-btn" onclick="selectMuscle('lats')">Lats (Латове/Широк гръб)</button>
+                <button class="m-btn" onclick="selectMuscle('lowerback')">Lower Back (Кръст)</button>
+                <button class="m-btn" onclick="selectMuscle('shoulders')">Shoulders (Рамене)</button>
+                <button class="m-btn" onclick="selectMuscle('biceps')">Biceps (Бицепс)</button>
+                <button class="m-btn" onclick="selectMuscle('forearms')">Forearms (Предмишници)</button>
+                <button class="m-btn" onclick="selectMuscle('triceps')">Triceps (Трицепс)</button>
+                <button class="m-btn" onclick="selectMuscle('abs')">Abs (Корем)</button>
+                <button class="m-btn" onclick="selectMuscle('quads')">Quads (Предно бедро)</button>
+                <button class="m-btn" onclick="selectMuscle('hamstrings')">Hamstrings (Задно бедро)</button>
+                <button class="m-btn" onclick="selectMuscle('glutes')">Glutes (Седалище)</button>
+                <button class="m-btn" onclick="selectMuscle('calves')">Calves (Прасци)</button>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')">GYM WORKOUT</button>
+                <button id="btn-home" class="tab-btn" onclick="setMode('home')">HOME WORKOUT</button>
+            </div>
+            <div id="info-card" class="info-card">
+                <h1>Ready to Train?</h1>
+                <p>Select a detailed muscle group to see specific exercises in English and Bulgarian.</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
