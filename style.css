@@ -68,6 +68,16 @@ body {
     border: 1px solid #222; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
+.description-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: #1a1a1a;
+    border-left: 4px solid var(--primary);
+    font-style: italic;
+    color: #ccc;
+    line-height: 1.6;
+}
+
 h1 { font-size: 42px; margin: 0; }
 ul { list-style: none; padding: 0; margin-top: 25px; }
 li { padding: 18px 0; border-bottom: 1px solid #222; font-size: 20px; color: #ddd; }
