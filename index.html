@@ -2,7 +2,7 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Muscle Atlas Pro | Expert Anatomy</title>
+    <title>Muscle Atlas Pro | Expert Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
             
             <div class="anatomy-box">
                 <div class="view-container">
-                    <span>Front (Предна част)</span>
+                    <span>Front View</span>
                     <svg viewBox="0 0 200 350" class="human-body">
                         <circle cx="100" cy="30" r="15" fill="#333" />
                         <path id="chest" class="muscle-segment" d="M70,60 Q100,50 130,60 L130,100 Q100,110 70,100 Z" onclick="selectMuscle('chest')" />
@@ -29,13 +29,14 @@
                 </div>
 
                 <div class="view-container">
-                    <span>Back (Задна част)</span>
+                    <span>Back View</span>
                     <svg viewBox="0 0 200 350" class="human-body">
                         <circle cx="100" cy="30" r="15" fill="#333" />
                         <path id="upperback" class="muscle-segment" d="M80,60 L120,60 L130,90 L70,90 Z" onclick="selectMuscle('upperback')" />
                         <path id="lats-l" class="muscle-segment" d="M70,95 L95,95 L95,145 L65,145 Z" onclick="selectMuscle('lats')" />
                         <path id="lats-r" class="muscle-segment" d="M105,95 L130,95 L135,145 L105,145 Z" onclick="selectMuscle('lats')" />
-                        <rect id="lowerback" class="muscle-segment" x="85" y="145" width="30" height="25" rx="2" onclick="selectMuscle('lowerback')" />
+                        
+                        <path id="lowerback" class="muscle-segment" d="M90,145 L110,145 L108,175 L92,175 Z" onclick="selectMuscle('lowerback')" />
                         
                         <ellipse id="glutes-l" class="muscle-segment" cx="85" cy="185" rx="15" ry="20" onclick="selectMuscle('glutes')" />
                         <ellipse id="glutes-r" class="muscle-segment" cx="115" cy="185" rx="15" ry="20" onclick="selectMuscle('glutes')" />
@@ -51,15 +52,15 @@
 
             <nav class="muscle-list">
                 <button class="m-btn" onclick="selectMuscle('chest')">Chest (Гърди)</button>
-                <button class="m-btn" onclick="selectMuscle('upperback')">Upper Back (Горна част/Трапец)</button>
-                <button class="m-btn" onclick="selectMuscle('lats')">Lats (Латове/Широк гръб)</button>
+                <button class="m-btn" onclick="selectMuscle('upperback')">Upper Back (Трапец)</button>
+                <button class="m-btn" onclick="selectMuscle('lats')">Lats (Латове)</button>
                 <button class="m-btn" onclick="selectMuscle('lowerback')">Lower Back (Кръст)</button>
                 <button class="m-btn" onclick="selectMuscle('shoulders')">Shoulders (Рамене)</button>
                 <button class="m-btn" onclick="selectMuscle('biceps')">Biceps (Бицепс)</button>
                 <button class="m-btn" onclick="selectMuscle('forearms')">Forearms (Предмишници)</button>
                 <button class="m-btn" onclick="selectMuscle('triceps')">Triceps (Трицепс)</button>
                 <button class="m-btn" onclick="selectMuscle('abs')">Abs (Корем)</button>
-                <button class="m-btn" onclick="selectMuscle('quads')">Quads (Предно бедро)</button>
+                <button class="m-btn" onclick="selectMuscle('quads')">Quads (Бедра)</button>
                 <button class="m-btn" onclick="selectMuscle('hamstrings')">Hamstrings (Задно бедро)</button>
                 <button class="m-btn" onclick="selectMuscle('glutes')">Glutes (Седалище)</button>
                 <button class="m-btn" onclick="selectMuscle('calves')">Calves (Прасци)</button>
@@ -68,12 +69,12 @@
 
         <div class="main-content">
             <div class="tabs">
-                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')">GYM WORKOUT</button>
-                <button id="btn-home" class="tab-btn" onclick="setMode('home')">HOME WORKOUT</button>
+                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')">GYM</button>
+                <button id="btn-home" class="tab-btn" onclick="setMode('home')">HOME</button>
             </div>
             <div id="info-card" class="info-card">
-                <h1>Ready to Train?</h1>
-                <p>Select a detailed muscle group to see specific exercises in English and Bulgarian.</p>
+                <h1 style="font-size: 50px;">Select Muscle</h1>
+                <p>Click on any muscle to see details and training advice.</p>
             </div>
         </div>
     </div>
