@@ -1,104 +1,113 @@
 let currentMuscle = null;
 let currentMode = 'gym';
 
-const database = {
+const data = {
     chest: {
         title: "Гърди", latin: "Pectoralis Major",
         gym: [
-            { name: "Бенч преса с щанга", equip: "barbell", diff: 3, synergy: ["triceps", "shoulders_front"], gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3VndXNidGphZHR5NnN6czl3ZW5hYTBzN25nZGNvYng3Y3J6eG5reSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKVUn7iM8FMEU24/giphy.gif" },
-            { name: "Наклонена лежанка (Дъмбели)", equip: "dumbbell", diff: 2, synergy: ["triceps", "shoulders_front"], gif: "" },
-            { name: "Кросоувър на кабели", equip: "machine", diff: 1, synergy: [], gif: "" }
+            { name: "Лежанка / Bench Press", diff: 2, secondary: ["triceps", "shoulders_front"], gif: "https://media.giphy.com/media/3o7TKVUn7iM8FMEU24/giphy.gif" },
+            { name: "Кофички / Dips", diff: 3, secondary: ["triceps", "shoulders_front"], gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHlxODFpM215eDZ5N3R5Y3YydXN3bm56bmNndHByYjN4ZXR4ZXRxeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKv6lS8THTD7X7a/giphy.gif" }
         ],
-        home: [
-            { name: "Класически лицеви опори", equip: "body", diff: 2, synergy: ["triceps"], gif: "" },
-            { name: "Широки лицеви опори", equip: "body", diff: 2, synergy: ["triceps"], gif: "" }
-        ],
-        stretch: [{ name: "Разтягане на врата (Chest Stretch)", gif: "" }],
-        stats: { strength: 95, volume: 92 },
-        tips: ["Свийте лопатките назад и надолу.", "Контролирайте спускането на тежестта."],
-        mistakes: ["Отскачане на лоста от гърдите.", "Прекалено широк хват."]
+        home: [{ name: "Лицеви опори", diff: 1, secondary: ["triceps"], gif: "" }],
+        stretch: [{ name: "Стреч на каса", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 95, volume: 90 },
+        tips: ["Лопатките назад.", "Контролирано спускане."],
+        mistakes: ["Отскачане от гърдите.", "Разперени лакти."]
+    },
+    shoulders_front: {
+        title: "Предно рамо", latin: "Anterior Deltoid",
+        gym: [{ name: "Раменна преса", diff: 3, secondary: ["triceps"], gif: "" }],
+        home: [{ name: "Пийк опори", diff: 3, secondary: ["triceps"], gif: "" }],
+        stretch: [{ name: "Стреч зад гърба", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 80, volume: 75 },
+        tips: ["Дръжте ядрото стегнато.", "Не заключвайте рязко горе."],
+        mistakes: ["Извиване на кръста."]
+    },
+    shoulders_side: {
+        title: "Средно рамо", latin: "Lateral Deltoid",
+        gym: [{ name: "Разтваряне встрани", diff: 1, secondary: ["traps"], gif: "" }],
+        home: [{ name: "Разтваряне с ластик", diff: 1, secondary: [], gif: "" }],
+        stretch: [{ name: "Cross-body стреч", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 50, volume: 95 },
+        tips: ["Водете с лактите.", "Малък пръст нагоре."],
+        mistakes: ["Люлеене на тялото."]
+    },
+    shoulders_rear: {
+        title: "Задно рамо", latin: "Posterior Deltoid",
+        gym: [{ name: "Фейс пул / Face Pull", diff: 2, secondary: ["traps"], gif: "" }],
+        home: [{ name: "Разтваряне наведен", diff: 2, secondary: [], gif: "" }],
+        stretch: [{ name: "Задно рамо стреч", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 45, volume: 85 },
+        tips: ["Стискайте лопатките.", "Леко сгънати лакти."],
+        mistakes: ["Прекалено тежка тежест."]
     },
     lats: {
-        title: "Гръб (Широк мускул)", latin: "Latissimus Dorsi",
-        gym: [
-            { name: "Вертикален скрипец", equip: "machine", diff: 1, synergy: ["biceps", "forearms"], gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3VndXNidGphZHR5NnN6czl3ZW5hYTBzN25nZGNvYng3Y3J6eG5reSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6oO302DqY9D1e/giphy.gif" },
-            { name: "Гребане с щанга", equip: "barbell", diff: 3, synergy: ["lowerback", "biceps", "traps"], gif: "" }
-        ],
-        home: [{ name: "Набирания (ако имате лост)", equip: "body", diff: 3, synergy: ["biceps"], gif: "" }],
-        stretch: [{ name: "Висящо разтягане (Dead Hang)", gif: "" }],
-        stats: { strength: 90, volume: 88 },
-        tips: ["Водете с лактите, а не с дланите.", "Мислете за 'затваряне' на мишницата към тялото."],
-        mistakes: ["Люлеене (кипинг).", "Прекалено малка амплитуда."]
-    },
-    traps: {
-        title: "Трапец", latin: "Musculus Trapezius",
-        gym: [{ name: "Шраг с дъмбели", equip: "dumbbell", diff: 1, synergy: ["forearms"], gif: "" }],
-        home: [{ name: "Y-Raises на земя", equip: "body", diff: 2, synergy: ["shoulders_front"], gif: "" }],
-        stretch: [{ name: "Страничен наклон на врата", gif: "" }],
-        stats: { strength: 80, volume: 70 },
-        tips: ["Движете само раменете нагоре-надолу.", "Задръжте пикова контракция."],
-        mistakes: ["Въртене на раменете в кръг."]
+        title: "Гръб (Латове)", latin: "Latissimus Dorsi",
+        gym: [{ name: "Вертикален скрипец", diff: 1, secondary: ["biceps"], gif: "" }],
+        home: [{ name: "Набирания", diff: 3, secondary: ["biceps", "forearms"], gif: "" }],
+        stretch: [{ name: "Висене на лост", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 90, volume: 95 },
+        tips: ["Дърпайте към гърдите.", "Мислете за лактите."],
+        mistakes: ["Дърпане зад врат."]
     },
     triceps: {
         title: "Трицепс", latin: "Triceps Brachii",
-        gym: [
-            { name: "Разгъване на скрипец", equip: "machine", diff: 1, synergy: [], gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1NHN1bnJpOWp0bmJqZ2xxeGZ3eXNxcnhqbmx3eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/vA3p9p3n4zSVO/giphy.gif" },
-            { name: "Френска преса", equip: "barbell", diff: 2, synergy: ["shoulders_front"], gif: "" }
-        ],
-        home: [{ name: "Диамантени опори", equip: "body", diff: 3, synergy: ["chest"], gif: "" }],
-        stretch: [{ name: "Трицепс стреч зад глава", gif: "" }],
-        stats: { strength: 75, volume: 90 },
-        tips: ["Заключете лактите неподвижно до тялото.", "Пълно разгъване."],
-        mistakes: ["Разтваряне на лактите встрани."]
+        gym: [{ name: "Разгъване на скрипец", diff: 1, secondary: [], gif: "" }],
+        home: [{ name: "Диамантени опори", diff: 2, secondary: ["chest"], gif: "" }],
+        stretch: [{ name: "Стреч зад глава", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 85, volume: 95 },
+        tips: ["Лактите до тялото.", "Пълно заключване."],
+        mistakes: ["Движение в раменете."]
     },
     biceps: {
         title: "Бицепс", latin: "Biceps Brachii",
-        gym: [{ name: "Сгъване с щанга", equip: "barbell", diff: 2, synergy: ["forearms"], gif: "" }],
-        home: [{ name: "Сгъване с ластик или туби", equip: "body", diff: 1, synergy: ["forearms"], gif: "" }],
-        stretch: [{ name: "Стреч на бицепс на стена", gif: "" }],
-        stats: { strength: 65, volume: 95 },
-        tips: ["Не люлейте тялото.", "Дръжте китките прави."],
-        mistakes: ["Използване на инерция."]
+        gym: [{ name: "Сгъване с щанга", diff: 2, secondary: ["forearms"], gif: "" }],
+        home: [{ name: "Сгъване с ластик", diff: 1, secondary: [], gif: "" }],
+        stretch: [{ name: "Стреч на стена", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 60, volume: 98 },
+        tips: ["Без залюляване.", "Бавно спускане."],
+        mistakes: ["Къси повторения."]
+    },
+    quads: {
+        title: "Квадрицепс", latin: "Quadriceps",
+        gym: [{ name: "Клек / Squat", diff: 3, secondary: ["glutes", "lowerback"], gif: "" }],
+        home: [{ name: "Напади", diff: 2, secondary: ["glutes"], gif: "" }],
+        stretch: [{ name: "Квадрицепс стреч", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 100, volume: 90 },
+        tips: ["Дълбок клек.", "Тежест на цяло стъпало."],
+        mistakes: ["Колене навътре."]
+    },
+    glutes: {
+        title: "Седалище", latin: "Gluteus Maximus",
+        gym: [{ name: "Хип Тръст", diff: 2, secondary: ["hamstrings"], gif: "" }],
+        home: [{ name: "Глутеус мост", diff: 1, secondary: [], gif: "" }],
+        stretch: [{ name: "Поза Гълъб", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 100, volume: 100 },
+        tips: ["Стискайте горе.", "Брадичка към гърди."],
+        mistakes: ["Хиперекстензия."]
     },
     hamstrings: {
         title: "Задно бедро", latin: "Biceps Femoris",
-        gym: [
-            { name: "Румънска мъртва тяга", equip: "barbell", diff: 3, synergy: ["lowerback", "glutes"], gif: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHY1Ym5nZ3VqZDFlYTM0NTRzYjF6Nmxtbm56Z3BqcW8yc3FqazN5ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3orieRjO5A3MAnB6M0/giphy.gif" },
-            { name: "Сгъване на машина", equip: "machine", diff: 1, synergy: [], gif: "" }
-        ],
-        home: [{ name: "Нордик сгъване", equip: "body", diff: 3, synergy: ["glutes"], gif: "" }],
-        stretch: [{ name: "Наклон напред (Hamstring Stretch)", gif: "" }],
-        stats: { strength: 90, volume: 85 },
-        tips: ["Бутайте таза назад, докато почувствате разтягане.", "Гърбът трябва да е 'бетон'."],
-        mistakes: ["Свиване на коленете.", "Отпускане на кръста."]
-    },
-    quads: {
-        title: "Квадрицепс", latin: "Quadriceps Femoris",
-        gym: [{ name: "Клек с щанга", equip: "barbell", diff: 3, synergy: ["glutes", "lowerback"], gif: "" }],
-        home: [{ name: "Български клек", equip: "body", diff: 3, synergy: ["glutes"], gif: "" }],
-        stretch: [{ name: "Стреч на квадрицепс (от стоеж)", gif: "" }],
-        stats: { strength: 100, volume: 90 },
-        tips: ["Цялото стъпало е на земята.", "Гърдите сочат напред."],
-        mistakes: ["Петите се отделят от пода."]
-    },
-    lowerback: {
-        title: "Кръст", latin: "Erector Spinae",
-        gym: [{ name: "Хиперекстензии", equip: "machine", diff: 2, synergy: ["glutes", "hamstrings"], gif: "" }],
-        home: [{ name: "Супермен (от лег)", equip: "body", diff: 1, synergy: [], gif: "" }],
-        stretch: [{ name: "Поза Котка-Крава", gif: "" }],
-        stats: { strength: 95, volume: 60 },
-        tips: ["Контролирано движение.", "Не се извивайте прекалено назад."],
-        mistakes: ["Резки движения."]
+        gym: [{ name: "Румънска тяга", diff: 3, secondary: ["lowerback", "glutes"], gif: "" }],
+        home: [{ name: "Нордик сгъване", diff: 3, secondary: [], gif: "" }],
+        stretch: [{ name: "Наклон напред", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 95, volume: 80 },
+        tips: ["Бутайте таза назад.", "Права гръб."],
+        mistakes: ["Свиване на колене."]
     },
     abs: {
-        title: "Корем", latin: "Rectus Abdominis",
-        gym: [{ name: "Повдигане на крака от вис", equip: "body", diff: 3, synergy: ["forearms"], gif: "" }],
-        home: [{ name: "Коремни преси", equip: "body", diff: 1, synergy: [], gif: "" }],
-        stretch: [{ name: "Поза Кобра", gif: "" }],
-        stats: { strength: 60, volume: 75 },
-        tips: ["Издишайте при контракцията.", "Притискайте кръста към пода."],
-        mistakes: ["Дърпане на врата с ръце."]
-    }
+        title: "Корем", latin: "Core",
+        gym: [{ name: "Повдигане на крака", diff: 3, secondary: [], gif: "" }],
+        home: [{ name: "Планк", diff: 2, secondary: [], gif: "" }],
+        stretch: [{ name: "Поза Кобра", diff: 1, secondary: [], gif: "" }],
+        stats: { strength: 70, volume: 60 },
+        tips: ["Навивайте таза.", "Издишайте горе."],
+        mistakes: ["Дърпане на врата."]
+    },
+    traps: { title: "Трапец", latin: "Trapezius", gym: [{ name: "Шраг", diff: 1, secondary: [] }], home: [], stretch: [], stats: { strength: 80, volume: 70 }, tips: ["Нагоре към ушите."], mistakes: ["Въртене на рамене."] },
+    lowerback: { title: "Кръст", latin: "Erector Spinae", gym: [{ name: "Тяга", diff: 3, secondary: ["glutes"] }], home: [], stretch: [], stats: { strength: 100, volume: 50 }, tips: ["Прав гръб."], mistakes: ["Котешки гръб."] },
+    forearms: { title: "Предмишница", latin: "Brachioradialis", gym: [{ name: "Фермерска разходка", diff: 2, secondary: [] }], home: [], stretch: [], stats: { strength: 90, volume: 60 }, tips: ["Здрав хват."], mistakes: ["Фитили на всичко."] },
+    calves: { title: "Прасци", latin: "Gastrocnemius", gym: [{ name: "Повдигане на пръсти", diff: 1, secondary: [] }], home: [], stretch: [], stats: { strength: 75, volume: 85 }, tips: ["Пълна амплитуда."], mistakes: ["Бързи повторения."] }
 };
 
 function selectMuscle(id) {
@@ -107,59 +116,48 @@ function selectMuscle(id) {
 }
 
 function updateUI() {
-    const m = database[currentMuscle];
+    const m = data[currentMuscle];
     if (!m) return;
 
     resetModel();
-    const targetElement = document.getElementById(currentMuscle);
-    if (targetElement) targetElement.classList.add('active-muscle');
+    document.querySelectorAll(`[id^="${currentMuscle}"]`).forEach(el => el.classList.add('active-muscle'));
 
-    document.getElementById('intro-msg').style.display = 'none';
-    document.getElementById('exercise-content').style.display = 'block';
-    document.getElementById('stats-panel').style.display = 'block';
-    
-    document.getElementById('lat-title').innerText = m.latin;
-    
-    const equip = document.getElementById('equip-filter').value;
-    let list = currentMode === 'stretch' ? m.stretch : 
-               (currentMode === 'gym' ? m.gym : m.home).filter(ex => equip === 'all' || ex.equip === equip);
+    document.getElementById('exercise-preview-panel').style.display = 'none';
+    document.getElementById('info-card').innerHTML = `<h1>${m.title}</h1><p class="latin-name">${m.latin}</p>`;
 
-    let html = `<h2>${m.title}</h2>`;
+    let list = currentMode === 'gym' ? m.gym : (currentMode === 'home' ? m.home : m.stretch);
+    let html = "";
     list.forEach((ex, i) => {
-        html += `<div class="ex-item" onclick="showExercise(${i})">
+        html += `<div class="exercise-item" onclick="activateExercise(${i})">
                     <span>${ex.name}</span>
-                    <span>${ex.diff ? "⚡".repeat(ex.diff) : "🧘"}</span>
+                    <span style="color:var(--primary)">${"⚡".repeat(ex.diff)}</span>
                  </div>`;
     });
-    document.getElementById('list-holder').innerHTML = html || "<p>Няма намерени упражнения за този филтър.</p>";
+    document.getElementById('info-card').innerHTML += html || "<p>Няма добавени упражнения за този режим.</p>";
 
-    document.getElementById('tips-list').innerHTML = m.tips.map(t => `<li>${t}</li>`).join('');
-    document.getElementById('error-list').innerHTML = m.mistakes.map(e => `<li>${e}</li>`).join('');
-    
-    // Анимация на баровете
-    setTimeout(() => {
-        document.getElementById('bar-strength').style.width = m.stats.strength + '%';
-        document.getElementById('bar-volume').style.width = m.stats.volume + '%';
-    }, 50);
+    document.getElementById('stats-panel').style.display = 'block';
+    document.getElementById('bar-strength').style.width = m.stats.strength + '%';
+    document.getElementById('bar-volume').style.width = m.stats.volume + '%';
+
+    document.getElementById('tips-list').innerHTML = m.tips.map(t => `<p>• ${t}</p>`).join('');
+    document.getElementById('errors-list').innerHTML = m.mistakes.map(e => `<p>• ${e}</p>`).join('');
 }
 
-function showExercise(idx) {
-    const m = database[currentMuscle];
-    const equip = document.getElementById('equip-filter').value;
-    let list = currentMode === 'stretch' ? m.stretch : 
-               (currentMode === 'gym' ? m.gym : m.home).filter(ex => equip === 'all' || ex.equip === equip);
-    
+function activateExercise(idx) {
+    const m = data[currentMuscle];
+    let list = currentMode === 'gym' ? m.gym : (currentMode === 'home' ? m.home : m.stretch);
     const ex = list[idx];
-    const gifImg = document.getElementById('main-gif');
-    gifImg.src = ex.gif || "https://via.placeholder.com/300x200?text=No+GIF+Available";
-    
+
+    document.getElementById('exercise-preview-panel').style.display = 'flex';
+    document.getElementById('ex-title').innerText = ex.name;
+    document.getElementById('ex-latin').innerText = m.latin;
+    document.getElementById('exercise-gif').src = ex.gif || "https://via.placeholder.com/220x150?text=No+GIF";
+
     resetModel();
-    document.getElementById(currentMuscle).classList.add('active-muscle');
-    
-    if (ex.synergy) {
-        ex.synergy.forEach(s => {
-            const el = document.getElementById(s);
-            if (el) el.classList.add('synergy-muscle');
+    document.querySelectorAll(`[id^="${currentMuscle}"]`).forEach(el => el.classList.add('active-muscle'));
+    if (ex.secondary) {
+        ex.secondary.forEach(s => {
+            document.querySelectorAll(`[id^="${s}"]`).forEach(el => el.classList.add('synergy-muscle'));
         });
     }
 }
@@ -171,8 +169,8 @@ function resetModel() {
 function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(`tab-${mode}`).classList.add('active');
-    updateUI();
+    document.getElementById(`btn-${mode}`).classList.add('active');
+    if (currentMuscle) updateUI();
 }
 
 function toggleTheme() {
