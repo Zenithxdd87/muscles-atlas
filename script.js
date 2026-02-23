@@ -1,133 +1,155 @@
 let currentMuscle = null;
 let currentMode = 'gym';
 
-function toggleTheme() {
-    document.body.classList.toggle('light-theme');
-}
-
 const data = {
     chest: {
         title: "Гърди / Chest",
         gym: [
-            { name: "Бенч преса / Bench Press", diff: 2 },
-            { name: "Наклонена лежанка / Incline Press", diff: 2 },
-            { name: "Кросоувър / Cable Flyes", diff: 1 },
-            { name: "Кофички / Chest Dips", diff: 3 }
+            { name: "Лежанка / Bench Press", diff: 2, secondary: ["triceps", "shoulders_front"] },
+            { name: "Флайс / Cable Flyes", diff: 1, secondary: ["shoulders_front"] }
         ],
-        home: [
-            { name: "Лицеви опори / Push-ups", diff: 1 },
-            { name: "Диамантени опори / Diamond Push-ups", diff: 2 }
-        ],
-        synergy: ["triceps", "shoulders_front"],
-        stats: { strength: 95, volume: 85 },
-        tips: ["Стиснете лопатките назад.", "Контролирайте лоста при спускане."],
-        mistakes: ["Отскачане на тежестта от гърдите.", "Прекалено широко разтворени лакти."]
+        home: [{ name: "Лицеви опори", diff: 1, secondary: ["triceps"] }],
+        stats: { strength: 90, volume: 85 },
+        tips: ["Стиснете лопатките.", "Лактите на 45 градуса."],
+        mistakes: ["Отскачане на лоста.", "Прекалено широки лакти."]
     },
-    abs: {
-        title: "Корем / Abs",
-        gym: [{ name: "Коремни на скрипец / Cable Crunches", diff: 1 }, { name: "Повдигане на крака от вис", diff: 3 }],
-        home: [{ name: "Планк / Plank", diff: 2 }, { name: "Велосипед / Bicycle Crunches", diff: 1 }],
-        synergy: ["lowerback"],
-        stats: { strength: 75, volume: 65 },
-        tips: ["Издишвайте при свиване.", "Стягайте корема през цялото време."],
-        mistakes: ["Дърпане на врата.", "Извиване на кръста при планк."]
+    lats: {
+        title: "Гръб / Lats",
+        gym: [
+            { name: "Скрипец / Lat Pulldown", diff: 1, secondary: ["biceps", "forearms"] },
+            { name: "Гребане с щанга", diff: 3, secondary: ["biceps", "abs"] }
+        ],
+        home: [{ name: "Набирания на лост", diff: 3, secondary: ["biceps"] }],
+        stats: { strength: 95, volume: 90 },
+        tips: ["Дърпайте с лактите.", "Пълно разтягане горе."],
+        mistakes: ["Използване на инерция.", "Дърпане само с бицепс."]
+    },
+    traps: {
+        title: "Трапец / Traps",
+        gym: [{ name: "Повдигане на рамене", diff: 1, secondary: ["forearms"] }],
+        home: [{ name: "Y-повдигания", diff: 2, secondary: ["shoulders_front"] }],
+        stats: { strength: 80, volume: 70 },
+        tips: ["Не въртете раменете.", "Задръжте горе."],
+        mistakes: ["Прекалено тежка щанга.", "Въртене на врата."]
     },
     shoulders_front: {
         title: "Предно рамо / Front Delts",
-        gym: [{ name: "Военна преса / Military Press", diff: 3 }, { name: "Предно повдигане", diff: 1 }],
-        home: [{ name: "Пийк опори / Pike Push-ups", diff: 2 }],
-        synergy: ["triceps", "chest"],
-        stats: { strength: 80, volume: 75 },
-        tips: ["Не люлейте тялото.", "Дръжте ядрото стегнато."],
-        mistakes: ["Прекалено голяма тежест.", "Архиране на гърба."]
-    },
-    lats: {
-        title: "Гръб (Латове) / Lats",
-        gym: [{ name: "Вертикален скрипец / Lat Pulldown", diff: 1 }, { name: "Набирания / Pull-ups", diff: 3 }],
-        home: [{ name: "Гребане под маса / Inverted Rows", diff: 2 }],
-        synergy: ["biceps", "forearms", "upperback"],
-        stats: { strength: 90, volume: 90 },
-        tips: ["Дърпайте с лактите.", "Пълен обхват на движение."],
-        mistakes: ["Използване на инерция.", "Непълно разтягане."]
+        gym: [{ name: "Раменна преса", diff: 2, secondary: ["triceps"] }],
+        home: [{ name: "Пийк опори", diff: 3, secondary: ["triceps"] }],
+        stats: { strength: 85, volume: 80 },
+        tips: ["Тялото е право.", "Контролирано спускане."],
+        mistakes: ["Архиране на гърба.", "Прекалено голяма тежест."]
     },
     biceps: {
         title: "Бицепс / Biceps",
-        gym: [{ name: "Сгъване с щанга / Barbell Curl", diff: 2 }, { name: "Чукове / Hammer Curls", diff: 1 }],
-        home: [{ name: "Сгъване с раница / Backpack Curls", diff: 1 }],
-        synergy: ["forearms"],
-        stats: { strength: 65, volume: 95 },
-        tips: ["Лактите до тялото.", "Без залюляване."],
-        mistakes: ["Люлеене на тялото.", "Непълно спускане."]
+        gym: [{ name: "Сгъване с щанга", diff: 2, secondary: ["forearms"] }],
+        home: [{ name: "Сгъване с ластик", diff: 1, secondary: ["forearms"] }],
+        stats: { strength: 60, volume: 95 },
+        tips: ["Лактите до тялото.", "Без люлеене."],
+        mistakes: ["Люлеене на кръста.", "Непълно спускане."]
     },
     triceps: {
         title: "Трицепс / Triceps",
-        gym: [{ name: "Разгъване на скрипец / Pushdowns", diff: 1 }, { name: "Френско / Skull Crushers", diff: 2 }],
-        home: [{ name: "Кофички на стол / Bench Dips", diff: 1 }],
-        synergy: ["chest", "shoulders_front"],
-        stats: { strength: 75, volume: 85 },
-        tips: ["Фиксирани лакти.", "Пълно разгъване."],
-        mistakes: ["Разтваряне на лактите встрани."]
+        gym: [{ name: "Френско разгъване", diff: 2, secondary: ["chest"] }],
+        home: [{ name: "Кофички на пейка", diff: 1, secondary: ["chest"] }],
+        stats: { strength: 70, volume: 90 },
+        tips: ["Фиксирани лакти.", "Пълно заключване."],
+        mistakes: ["Разтваряне на лактите.", "Прекалено бързо темпо."]
     },
     quads: {
-        title: "Предно бедро / Quads",
-        gym: [{ name: "Клек / Squat", diff: 3 }, { name: "Лег преса / Leg Press", diff: 2 }],
-        home: [{ name: "Български клек / Bulgarian Squat", diff: 3 }],
-        synergy: ["glutes", "lowerback", "calves"],
+        title: "Квадрицепс / Quads",
+        gym: [{ name: "Клек / Squat", diff: 3, secondary: ["glutes", "abs"] }],
+        home: [{ name: "Напади / Lunges", diff: 2, secondary: ["glutes"] }],
         stats: { strength: 100, volume: 95 },
-        tips: ["Тежестта на петите.", "Изправен гръб."],
-        mistakes: ["Колената навътре.", "Повдигане на петите."]
+        tips: ["Гърбът е изправен.", "Колената следват пръстите."],
+        mistakes: ["Повдигане на петите.", "Колена навътре."]
+    },
+    hamstrings: {
+        title: "Задно бедро / Hamstrings",
+        gym: [{ name: "Римска тяга", diff: 3, secondary: ["glutes", "traps"] }],
+        home: [{ name: "Глутеус мост (1 крак)", diff: 2, secondary: ["glutes"] }],
+        stats: { strength: 90, volume: 85 },
+        tips: ["Бутайте таза назад.", "Леко свити колена."],
+        mistakes: ["Изгърбване.", "Прекалено много свиване в коляното."]
     },
     glutes: {
         title: "Седалище / Glutes",
-        gym: [{ name: "Хип Тръст / Hip Thrust", diff: 2 }, { name: "Сумо тяга", diff: 3 }],
-        home: [{ name: "Глутеус мост / Glute Bridge", diff: 1 }],
-        synergy: ["hamstrings", "lowerback"],
+        gym: [{ name: "Хип Тръст", diff: 2, secondary: ["hamstrings", "abs"] }],
+        home: [{ name: "Махове назад", diff: 1, secondary: ["hamstrings"] }],
         stats: { strength: 100, volume: 100 },
-        tips: ["Стиснете в горна точка.", "Бутайте през петите."],
-        mistakes: ["Недостатъчна амплитуда."]
+        tips: ["Стиснете в горна точка.", "Брадичката към гърдите."],
+        mistakes: ["Прекалено голям арх в кръста."]
+    },
+    calves: {
+        title: "Прасец / Calves",
+        gym: [{ name: "Повдигане на калф машина", diff: 1, secondary: [] }],
+        home: [{ name: "Повдигане на един крак", diff: 2, secondary: [] }],
+        stats: { strength: 80, volume: 60 },
+        tips: ["Пълно разтягане долу.", "Задръжте горе."],
+        mistakes: ["Бързи и насечени движения."]
+    },
+    abs: {
+        title: "Корем / Abs",
+        gym: [{ name: "Повдигане на крака", diff: 2, secondary: ["quads"] }],
+        home: [{ name: "Коремни преси", diff: 1, secondary: [] }],
+        stats: { strength: 70, volume: 60 },
+        tips: ["Издишайте при свиване.", "Бавно темпо."],
+        mistakes: ["Дърпане на врата.", "Извиване на кръста."]
     }
-    // Тук могат да се добавят останалите групи: forearms, upperback, lowerback, shoulders_side, shoulders_rear, hamstrings, calves по същия модел.
 };
 
-function selectMuscle(muscle) {
-    currentMuscle = muscle;
-    document.querySelectorAll('.muscle-segment').forEach(el => el.classList.remove('active-muscle', 'synergy-muscle'));
 
-    const mData = data[muscle];
-    if (!mData) return;
 
-    // Активен мускул
-    document.querySelectorAll(`[id^="${muscle}"]`).forEach(part => part.classList.add('active-muscle'));
-
-    // Синергия
-    if (mData.synergy) {
-        mData.synergy.forEach(s => {
-            document.querySelectorAll(`[id^="${s}"]`).forEach(p => p.classList.add('synergy-muscle'));
-        });
-    }
-
+function selectMuscle(mId) {
+    currentMuscle = mId;
     updateUI();
 }
 
 function updateUI() {
     const m = data[currentMuscle];
-    const exList = currentMode === 'gym' ? m.gym : m.home;
-    
-    let html = `<h1>${m.title}</h1><ul>`;
-    exList.forEach(ex => {
-        html += `<li>${ex.name} <span class="diff-badge diff-${ex.diff}">${"⚡".repeat(ex.diff)}</span></li>`;
-    });
-    html += `</ul>`;
-    document.getElementById('info-card').innerHTML = html;
+    if (!m) return;
 
+    resetModel();
+    highlight(currentMuscle, 'active-muscle');
+
+    const exList = currentMode === 'gym' ? m.gym : m.home;
+    let html = `<h1>${m.title}</h1><p style="font-size:11px;color:#888;">Кликни упражнение за синергия</p>`;
+    
+    exList.forEach((ex, i) => {
+        html += `<div class="exercise-item" onclick="activateSynergy(${i})">
+                    ${ex.name} <span class="diff-badge diff-${ex.diff}">${"⚡".repeat(ex.diff)}</span>
+                 </div>`;
+    });
+    
+    document.getElementById('info-card').innerHTML = html;
     document.getElementById('stats-container').style.display = 'block';
+    
     setTimeout(() => {
         document.getElementById('bar-strength').style.width = m.stats.strength + '%';
         document.getElementById('bar-volume').style.width = m.stats.volume + '%';
     }, 50);
 
     document.getElementById('tips-container').innerHTML = m.tips.map(t => `<div class="tip-item">${t}</div>`).join('');
-    document.getElementById('mistakes-container').innerHTML = m.mistakes.map(mis => `<div class="mistake-item">❌ ${mis}</div>`).join('');
+    document.getElementById('mistakes-container').innerHTML = m.mistakes.map(mis => `<div class="mistake-item">${mis}</div>`).join('');
+}
+
+function activateSynergy(idx) {
+    const m = data[currentMuscle];
+    const ex = (currentMode === 'gym' ? m.gym : m.home)[idx];
+    resetModel();
+    highlight(currentMuscle, 'active-muscle');
+    if (ex.secondary) ex.secondary.forEach(s => highlight(s, 'synergy-muscle'));
+    
+    document.querySelectorAll('.exercise-item').forEach(el => el.classList.remove('active-ex'));
+    event.currentTarget.classList.add('active-ex');
+}
+
+function highlight(id, cls) {
+    document.querySelectorAll(`[id^="${id}"]`).forEach(el => el.classList.add(cls));
+}
+
+function resetModel() {
+    document.querySelectorAll('.muscle-segment').forEach(el => el.classList.remove('active-muscle', 'synergy-muscle'));
 }
 
 function setMode(mode) {
@@ -135,4 +157,8 @@ function setMode(mode) {
     document.getElementById('btn-gym').classList.toggle('active', mode === 'gym');
     document.getElementById('btn-home').classList.toggle('active', mode === 'home');
     if (currentMuscle) updateUI();
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-theme');
 }
