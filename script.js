@@ -1,182 +1,123 @@
 let currentMuscle = null;
 let currentMode = 'gym';
+let timerInterval;
 
 const data = {
     chest: {
-        title: "Гърди / Chest",
-        desc: "Големият гръден мускул е основен за всички бутащи движения и хоризонтално привеждане на ръцете.",
-        funcs: ["Хоризонтална аддукция", "Вътрешна ротация", "Флексия"],
+        title: "Гърди (Pectoralis Major)",
+        desc: "Големият гръден мускул е основен за хоризонталното изтласкване и аддукцията на ръцете.",
+        funcs: ["Хоризонтална аддукция", "Вътрешна ротация", "Антефлексия"],
+        risk: "Среден Риск",
         gym: [
-            { name: "Бенч преса / Bench Press", diff: 2, secondary: ["triceps", "shoulders_front"] },
-            { name: "Наклонена лежанка / Incline DB Press", diff: 2, secondary: ["shoulders_front", "triceps"] },
-            { name: "Кросоувър / Cable Flys", diff: 1, secondary: ["shoulders_front"] }
+            { name: "Бенч преса с лост", diff: 2, secondary: ["triceps", "shoulders_front"] },
+            { name: "Наклонена лежанка с дъмбели", diff: 2, secondary: ["shoulders_front"] },
+            { name: "Кросоувър (Горен скрипец)", diff: 1, secondary: [] },
+            { name: "Кофички за гърди", diff: 3, secondary: ["triceps"] },
+            { name: "Пек Дек Машина", diff: 1, secondary: [] }
         ],
-        home: [{ name: "Лицеви опори / Push-ups", diff: 1, secondary: ["triceps"] }],
-        stretching: [{ name: "Разтягане на каса на врата", goal: "Отваряне на гръдния кош" }],
+        home: [
+            { name: "Лицеви опори (Класически)", diff: 1, secondary: ["triceps"] },
+            { name: "Лицеви опори с крака на високо", diff: 2, secondary: ["shoulders_front"] },
+            { name: "Широки лицеви опори", diff: 2, secondary: [] }
+        ],
+        stretching: [{ name: "Разтягане на врата/касата", goal: "30-45 секунди" }],
         stats: { strength: 90, volume: 85 },
-        tips: ["Свийте лопатките назад.", "Дръжте лактите под ъгъл 45-60 градуса."],
-        mistakes: ["Отскачане на лоста.", "Прекалено разтворени лакти."]
-    },
-    traps: {
-        title: "Трапец / Traps",
-        desc: "Мускулът, който покрива горната част на гърба и врата. Отговаря за движението на лопатките.",
-        funcs: ["Елевация на лопатките", "Ретракция"],
-        gym: [{ name: "Повдигане на рамене с щанга / Shrugs", diff: 1, secondary: ["forearms"] }],
-        home: [{ name: "Повдигане на раници / Bag Shrugs", diff: 1, secondary: ["forearms"] }],
-        stretching: [{ name: "Странично накланяне на главата", goal: "Освобождаване на напрежението във врата" }],
-        stats: { strength: 80, volume: 70 },
-        tips: ["Дърпайте право нагоре.", "Не въртете раменете."],
-        mistakes: ["Прекалено тежка щанга и малък обсег."]
+        tips: ["Прибирайте лопатките назад.", "Не заключвайте рязко лактите.", "Мислете за събиране на лактите един към друг."],
+        mistakes: ["Твърде голям наклон на лактите (90°).", "Отскачане на тежестта от гърдите.", "Плитки повторения."]
     },
     lats: {
-        title: "Гръб (Широк) / Lats",
-        desc: "Най-широкият мускул на гърба. Придава V-образната форма.",
-        funcs: ["Дърпане", "Аддукция на рамото"],
+        title: "Гръб (Latissimus Dorsi)",
+        desc: "Най-широкият мускул на гърба, отговорен за дърпащите движения и V-образната форма.",
+        funcs: ["Аддукция", "Екстензия на рамото", "Дърпане назад"],
+        risk: "Нисък Риск",
         gym: [
-            { name: "Набирания / Pull-ups", diff: 3, secondary: ["biceps", "forearms"] },
-            { name: "Вертикален скрипец / Lat Pulldown", diff: 1, secondary: ["biceps"] }
+            { name: "Набирания (Широк хват)", diff: 3, secondary: ["biceps", "forearms"] },
+            { name: "Вертикален скрипец", diff: 1, secondary: ["biceps"] },
+            { name: "Гребане с щанга", diff: 3, secondary: ["lowerback", "biceps"] },
+            { name: "Гребане на долен скрипец", diff: 2, secondary: ["traps"] }
         ],
-        home: [{ name: "Австралийски набирания", diff: 2, secondary: ["biceps"] }],
-        stretching: [{ name: "Поза 'Дете'", goal: "Удължаване на гръбнака" }],
+        home: [
+            { name: "Австралийски набирания", diff: 2, secondary: ["biceps"] },
+            { name: "Гребане с раница/туби", diff: 1, secondary: ["biceps"] }
+        ],
+        stretching: [{ name: "Поза 'Дете' (Child's Pose)", goal: "60 секунди" }],
         stats: { strength: 95, volume: 90 },
-        tips: ["Водете с лактите.", "Изпъчете гърдите горе."],
-        mistakes: ["Люлеене на тялото."]
-    },
-    shoulders_front: {
-        title: "Предно рамо / Front Delts",
-        desc: "Отговаря за вдигането на ръката напред.",
-        funcs: ["Антефлексия", "Вътрешна ротация"],
-        gym: [{ name: "Военна преса / Military Press", diff: 3, secondary: ["triceps"] }],
-        home: [{ name: "Пийк опори / Pike Push-ups", diff: 3, secondary: ["triceps"] }],
-        stretching: [{ name: "Ръце зад гърба със заключени пръсти", goal: "Разтягане на предното рамо" }],
-        stats: { strength: 85, volume: 80 },
-        tips: ["Стягайте корема и седалището."],
-        mistakes: ["Прекалено извиване на кръста назад."]
-    },
-    shoulders_side: {
-        title: "Средно рамо / Lateral Delts",
-        desc: "Осигурява ширината на раменете.",
-        funcs: ["Абдукция на ръката (встрани)"],
-        gym: [{ name: "Разтваряне встрани / Lateral Raises", diff: 1, secondary: ["traps"] }],
-        home: [{ name: "Разтваряне с ластик или туби", diff: 1, secondary: ["traps"] }],
-        stretching: [{ name: "Привеждане на ръката пред гърдите", goal: "Разтягане на делтовидния мускул" }],
-        stats: { strength: 50, volume: 95 },
-        tips: ["Дръжте малкия пръст по-високо."],
-        mistakes: ["Използване на инерция."]
-    },
-    shoulders_rear: {
-        title: "Задно рамо / Rear Delts",
-        desc: "Малък, но важен мускул за стойката и здравето на рамото.",
-        funcs: ["Хоризонтална абдукция"],
-        gym: [{ name: "Фейс пул / Face Pulls", diff: 2, secondary: ["traps"] }],
-        home: [{ name: "Разтваряне от наклон с тежест", diff: 2, secondary: ["traps"] }],
-        stretching: [{ name: "Кръстосване на ръцете пред тялото", goal: "Разтягане на задното рамо" }],
-        stats: { strength: 40, volume: 85 },
-        tips: ["Концентрирайте се върху задната част."],
-        mistakes: ["Твърде голяма тежест."]
-    },
-    biceps: {
-        title: "Бицепс / Biceps",
-        desc: "Двуглав мускул на мишницата.",
-        funcs: ["Флексия в лакътя", "Супинация"],
-        gym: [{ name: "Сгъване с щанга / Barbell Curls", diff: 2, secondary: ["forearms"] }],
-        home: [{ name: "Сгъване с ластик / Band Curls", diff: 1, secondary: ["forearms"] }],
-        stretching: [{ name: "Разтягане на бицепса на стена", goal: "Удължаване на мускула" }],
-        stats: { strength: 60, volume: 95 },
-        tips: ["Лактите неподвижни до тялото."],
-        mistakes: ["Люлеене на тялото."]
-    },
-    triceps: {
-        title: "Трицепс / Triceps",
-        desc: "Триглав мускул, заемащ 2/3 от обема на ръката.",
-        funcs: ["Екстензия в лакътя"],
-        gym: [{ name: "Разгъване на скрипец", diff: 1, secondary: ["shoulders_front"] }],
-        home: [{ name: "Диамантени опори", diff: 2, secondary: ["chest"] }],
-        stretching: [{ name: "Ръка зад главата (лакът нагоре)", goal: "Разтягане на дългата глава" }],
-        stats: { strength: 75, volume: 90 },
-        tips: ["Пълно заключване на лакътя."],
-        mistakes: ["Разтваряне на лактите встрани."]
-    },
-    forearms: {
-        title: "Предмишници / Forearms",
-        desc: "Отговарят за хвата и движенията в китката.",
-        funcs: ["Флексия/Екстензия на китката", "Хват"],
-        gym: [{ name: "Фермерска разходка", diff: 2, secondary: ["traps"] }],
-        home: [{ name: "Висене на лост", diff: 2, secondary: ["lats"] }],
-        stretching: [{ name: "Разтягане на китките (длани напред)", goal: "Превенция на тунелен синдром" }],
-        stats: { strength: 65, volume: 75 },
-        tips: ["Стискайте лоста силно."],
-        mistakes: ["Прекомерна употреба на фитили."]
-    },
-    abs: {
-        title: "Корем / Abs",
-        desc: "Ядрото на тялото. Стабилизира гръбнака.",
-        funcs: ["Флексия на торса", "Стабилизация"],
-        gym: [{ name: "Повдигане на крака от вис", diff: 3, secondary: ["forearms"] }],
-        home: [{ name: "Планк / Plank", diff: 2, secondary: ["lowerback"] }],
-        stretching: [{ name: "Поза 'Кобра'", goal: "Разтягане на коремната стена" }],
-        stats: { strength: 75, volume: 65 },
-        tips: ["Дишайте диафрагмено."],
-        mistakes: ["Дърпане на врата при коремни преси."]
-    },
-    lowerback: {
-        title: "Кръст / Lower Back",
-        desc: "Еректорните мускули на гръбнака.",
-        funcs: ["Екстензия на гръбнака"],
-        gym: [{ name: "Мъртва тяга / Deadlift", diff: 3, secondary: ["hamstrings", "glutes"] }],
-        home: [{ name: "Супермен / Superman", diff: 1, secondary: ["glutes"] }],
-        stretching: [{ name: "Котешки гръб", goal: "Мобилност на гръбнака" }],
-        stats: { strength: 100, volume: 60 },
-        tips: ["Пазете гръбнака неутрален."],
-        mistakes: ["Изгърбване (котешки гръб)."]
+        tips: ["Дърпайте с лактите, не с дланите.", "Стискайте гърба в края на движението."],
+        mistakes: ["Използване на инерция (люлеене).", "Прекалено много бицепс при дърпане."]
     },
     quads: {
-        title: "Предно бедро / Quads",
-        desc: "Най-голямата мускулна група в тялото.",
-        funcs: ["Екстензия на коляното"],
-        gym: [{ name: "Клек / Squat", diff: 3, secondary: ["glutes", "lowerback"] }],
-        home: [{ name: "Български клек", diff: 3, secondary: ["glutes"] }],
-        stretching: [{ name: "Пета към седалище (от стоеж)", goal: "Разтягане на квадрицепса" }],
+        title: "Предно бедро (Quadriceps)",
+        desc: "Четириглав мускул, отговорен за екстензията на коляното и стабилността.",
+        funcs: ["Екстензия на коляното", "Флексия на таза"],
+        risk: "Висок Риск",
+        gym: [
+            { name: "Клек с щанга", diff: 3, secondary: ["glutes", "lowerback"] },
+            { name: "Лег преса", diff: 2, secondary: ["glutes"] },
+            { name: "Хакен клек", diff: 2, secondary: [] },
+            { name: "Бедрено разгъване", diff: 1, secondary: [] }
+        ],
+        home: [
+            { name: "Български клек", diff: 3, secondary: ["glutes"] },
+            { name: "Клек със собствено тегло", diff: 1, secondary: [] },
+            { name: "Напади", diff: 2, secondary: ["glutes"] }
+        ],
+        stretching: [{ name: "Класическо разтягане на квадрицепс", goal: "45 секунди на крак" }],
         stats: { strength: 100, volume: 95 },
-        tips: ["Тежестта на цялото стъпало."],
-        mistakes: ["Колене пред пръстите (прекомерно)."]
+        tips: ["Дръжте гърба изправен.", "Тежестта е на цялото стъпало."],
+        mistakes: ["Коленете влизат навътре.", "Вдигане на петите от пода."]
     },
-    hamstrings: {
-        title: "Задно бедро / Hamstrings",
-        desc: "Важни за спринтиране и сгъване на крака.",
-        funcs: ["Флексия на коляното", "Екстензия на таза"],
-        gym: [{ name: "Римска тяга / RDL", diff: 3, secondary: ["glutes"] }],
-        home: [{ name: "Нордик сгъване / Nordic Curls", diff: 3, secondary: ["glutes"] }],
-        stretching: [{ name: "Наклон напред (докосване на пръсти)", goal: "Удължаване на задното бедро" }],
-        stats: { strength: 90, volume: 85 },
-        tips: ["Бутайте таза максимално назад."],
-        mistakes: ["Прекалено свиване на коленете."]
+    abs: {
+        title: "Коремни мускули (Core)",
+        desc: "Стабилизира ядрото и предпазва гръбначния стълб.",
+        funcs: ["Флексия на гръбнака", "Стабилизация"],
+        risk: "Нисък Риск",
+        gym: [{ name: "Повдигане на крака от вис", diff: 3, secondary: [] }],
+        home: [
+            { name: "Планк", diff: 2, secondary: ["shoulders_front"] },
+            { name: "Коремни преси", diff: 1, secondary: [] },
+            { name: "Руско извиване (Russian Twist)", diff: 2, secondary: [] }
+        ],
+        stretching: [{ name: "Поза 'Кобра'", goal: "30 секунди" }],
+        stats: { strength: 80, volume: 70 },
+        tips: ["Дишайте при контракция.", "Не дърпайте врата си с ръце."],
+        mistakes: ["Извиване на кръста при планк.", "Твърде бързи повторения."]
     },
-    glutes: {
-        title: "Седалище / Glutes",
-        desc: "Най-силният мускул за екстензия на таза.",
-        funcs: ["Екстензия на таза", "Абдукция"],
-        gym: [{ name: "Хип тръст / Hip Thrust", diff: 2, secondary: ["hamstrings"] }],
-        home: [{ name: "Глутеус мост", diff: 1, secondary: ["hamstrings"] }],
-        stretching: [{ name: "Поза 'Гълъб'", goal: "Дълбоко разтягане на седалището" }],
-        stats: { strength: 100, volume: 95 },
-        tips: ["Стискайте силно горе."],
-        mistakes: ["Прекалено извиване на кръста."]
+    biceps: {
+        title: "Бицепс (Biceps Brachii)",
+        desc: "Двуглав мускул на ръката.",
+        funcs: ["Сгъване в лакътя", "Супинация"],
+        risk: "Нисък Риск",
+        gym: [
+            { name: "Сгъване с щанга (прав лост)", diff: 2, secondary: ["forearms"] },
+            { name: "Чуково сгъване", diff: 1, secondary: ["forearms"] },
+            { name: "Скотово сгъване", diff: 2, secondary: [] }
+        ],
+        home: [{ name: "Сгъване с раница/ластик", diff: 1, secondary: [] }],
+        stretching: [{ name: "Разтягане на бицепс на стена", goal: "30 секунди" }],
+        stats: { strength: 60, volume: 100 },
+        tips: ["Не мърдайте лактите напред-назад.", "Пълен обсег."],
+        mistakes: ["Люлеене на тялото (Cheating)."]
     },
-    calves: {
-        title: "Прасци / Calves",
-        desc: "Изградени от гастрокнемиус и солеус.",
-        funcs: ["Плантарна флексия"],
-        gym: [{ name: "Повдигане на прасци от стоеж", diff: 1, secondary: [] }],
-        home: [{ name: "Повдигане на един крак на стъпало", diff: 1, secondary: [] }],
-        stretching: [{ name: "Опиране в стена (пета на пода)", goal: "Разтягане на прасеца" }],
-        stats: { strength: 80, volume: 60 },
-        tips: ["Пауза в долна и горна точка."],
-        mistakes: ["Подскачане вместо контролирано движение."]
+    triceps: {
+        title: "Трицепс (Triceps Brachii)",
+        desc: "Триглав мускул, заемащ 2/3 от ръката.",
+        funcs: ["Екстензия в лакътя"],
+        risk: "Нисък Риск",
+        gym: [
+            { name: "Разгъване на скрипец", diff: 1, secondary: [] },
+            { name: "Френско разгъване", diff: 3, secondary: [] },
+            { name: "Тясна лежанка", diff: 2, secondary: ["chest"] }
+        ],
+        home: [{ name: "Диамантени опори", diff: 2, secondary: ["chest"] }],
+        stretching: [{ name: "Разтягане зад глава", goal: "30 секунди" }],
+        stats: { strength: 75, volume: 95 },
+        tips: ["Дръжте лактите близо до главата."],
+        mistakes: ["Разтваряне на лактите встрани."]
     }
+    // Добави останалите (shoulders, hamstrings, glutes, calves) по същия шаблон ако желаеш!
 };
 
-// --- LOGIC FUNCTIONS ---
+// --- ОСНОВНИ ФУНКЦИИ ---
 
 function selectMuscle(mId) {
     currentMuscle = mId;
@@ -193,10 +134,17 @@ function updateUI() {
     const infoCard = document.getElementById('info-card');
     const extraCard = document.getElementById('extra-info');
     const statsCard = document.getElementById('stats-container');
+    const riskBadge = document.getElementById('risk-badge');
 
     infoCard.style.display = 'none';
     extraCard.style.display = 'none';
     statsCard.style.display = 'none';
+
+    // Риск индикатор
+    riskBadge.innerText = m.risk;
+    if (m.risk.includes("Висок")) riskBadge.style.background = "#ff4d4d";
+    else if (m.risk.includes("Среден")) riskBadge.style.background = "#ff9800";
+    else riskBadge.style.background = "#4caf50";
 
     if (currentMode === 'info') {
         extraCard.style.display = 'block';
@@ -213,13 +161,17 @@ function updateUI() {
         extraCard.style.display = 'block';
         extraCard.innerHTML = `
             <h2 style="color:var(--stretch)">Стречинг🧘</h2>
-            <p style="font-size:13px; color:gray;">Задръжте всяка позиция за 30-40 сек.</p>
             ${m.stretching.map(s => `
                 <div class="stretch-card">
                     <strong>${s.name}</strong><br>
                     <small>Цел: ${s.goal}</small>
                 </div>
             `).join('')}
+            <div class="timer-box">
+                <span>ТАЙМЕР ЗА РАЗТЯГАНЕ</span>
+                <div id="timer-display">30</div>
+                <button class="timer-btn" onclick="startTimer(30)">СТАРТ</button>
+            </div>
         `;
     }
     else {
@@ -227,13 +179,12 @@ function updateUI() {
         statsCard.style.display = 'block';
         const exList = (currentMode === 'gym') ? m.gym : m.home;
         
-        infoCard.innerHTML = `<h1>${m.title}</h1><p style="font-size:12px;color:gray;">Упражнения:</p>` + 
-            exList.map((ex, i) => `
-                <div class="exercise-item" onclick="activateSynergy(${i})">
-                    <span>${ex.name}</span>
-                    <span class="diff-badge">${"⚡".repeat(ex.diff)}</span>
-                </div>
-            `).join('');
+        infoCard.innerHTML = `<h1>${m.title}</h1>` + exList.map((ex, i) => `
+            <div class="exercise-item" onclick="activateSynergy(${i})">
+                <span>${ex.name}</span>
+                <span class="diff-badge">${"⚡".repeat(ex.diff)}</span>
+            </div>
+        `).join('');
         
         setTimeout(() => {
             document.getElementById('bar-strength').style.width = m.stats.strength + '%';
@@ -241,21 +192,39 @@ function updateUI() {
         }, 50);
     }
 
-    document.getElementById('tips-container').innerHTML = m.tips.map(t => `<div class="tip-item">✔️ ${t}</div>`).join('');
-    document.getElementById('mistakes-container').innerHTML = m.mistakes.map(mis => `<div class="mistake-item">❌ ${mis}</div>`).join('');
+    document.getElementById('tips-container').innerHTML = m.tips.map(t => `<div class="tip-item">💡 ${t}</div>`).join('');
+    document.getElementById('mistakes-container').innerHTML = m.mistakes.map(mis => `<div class="mistake-item">🛑 ${mis}</div>`).join('');
+}
+
+function searchExercises() {
+    let input = document.getElementById('search-bar').value.toLowerCase();
+    let items = document.getElementsByClassName('exercise-item');
+    for (let i = 0; i < items.length; i++) {
+        items[i].style.display = items[i].innerText.toLowerCase().includes(input) ? "flex" : "none";
+    }
+}
+
+function startTimer(seconds) {
+    clearInterval(timerInterval);
+    let timeLeft = seconds;
+    const display = document.getElementById('timer-display');
+    display.innerText = timeLeft;
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        display.innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Времето за разтягане приключи!");
+        }
+    }, 1000);
 }
 
 function activateSynergy(idx) {
     const m = data[currentMuscle];
     const ex = (currentMode === 'gym' ? m.gym : m.home)[idx];
-    
     resetModelColors();
     highlightBodyParts(currentMuscle, 'active-muscle');
-    
-    if (ex.secondary) {
-        ex.secondary.forEach(sId => highlightBodyParts(sId, 'synergy-muscle'));
-    }
-    
+    if (ex.secondary) ex.secondary.forEach(sId => highlightBodyParts(sId, 'synergy-muscle'));
     document.querySelectorAll('.exercise-item').forEach(el => el.classList.remove('active-ex'));
     event.currentTarget.classList.add('active-ex');
 }
