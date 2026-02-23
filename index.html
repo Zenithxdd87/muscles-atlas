@@ -14,13 +14,12 @@
                 <button id="theme-toggle" onclick="toggleTheme()" title="Смени темата">🌓</button>
             </div>
             <div class="anatomy-box">
-                <!-- FRONT VIEW -->
                 <div class="view-container">
                     <span>Отпред / Front</span>
                     <svg viewBox="0 0 200 350" class="human-body">
                         <path d="M100,20 Q120,20 120,45 Q120,70 100,70 Q80,70 80,45 Q80,20 100,20" fill="#333"/>
-                        
                         <path id="traps_front" class="muscle-segment" d="M90,50 L110,50 L108,70 L92,70 Z" onclick="selectMuscle('traps')" />
+                        
                         <path id="chest" class="muscle-segment" d="M72,75 Q100,65 128,75 L132,105 Q100,115 68,105 Z" onclick="selectMuscle('chest')" />
                         <path id="abs" class="muscle-segment" d="M75,110 L125,110 L120,180 L80,180 Z" onclick="selectMuscle('abs')" />
                         
@@ -38,8 +37,6 @@
                         <path id="quads_r" class="muscle-segment" d="M125,185 Q100,185 102,240 L105,290 Q125,290 130,240 Z" onclick="selectMuscle('quads')" />
                     </svg>
                 </div>
-
-                <!-- BACK VIEW -->
                 <div class="view-container">
                     <span>Отзад / Back</span>
                     <svg viewBox="0 0 200 350" class="human-body">
