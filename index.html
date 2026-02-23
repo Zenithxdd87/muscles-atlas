@@ -6,14 +6,17 @@
     <title>Muscle Atlas Ultimate Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark-theme">
     <div class="app-container">
         <div class="sidebar-left">
-            <h2 class="logo">Muscle<span>Atlas</span></h2>
+            <div class="header-top">
+                <h2 class="logo">Muscle<span>Atlas</span></h2>
+                <button id="theme-toggle" onclick="toggleTheme()" title="Смяна на тема">🌓</button>
+            </div>
             <div class="anatomy-box">
                 <div class="view-container">
-                    <span>Отпред (Front)</span>
-                    <svg viewBox="0 0 200 350" class="human-body">
+                    <span>Отпред / Front</span>
+                    <svg viewBox="0 0 200 350" class="human-body" id="body-front">
                         <path d="M100,20 Q120,20 120,45 Q120,70 100,70 Q80,70 80,45 Q80,20 100,20" fill="#333"/>
                         <path id="chest" class="muscle-segment" d="M72,75 Q100,65 128,75 L132,105 Q100,115 68,105 Z" onclick="selectMuscle('chest')" />
                         <path id="abs" class="muscle-segment" d="M75,110 L125,110 L120,180 L80,180 Z" onclick="selectMuscle('abs')" />
@@ -30,8 +33,8 @@
                     </svg>
                 </div>
                 <div class="view-container">
-                    <span>Отзад (Back)</span>
-                    <svg viewBox="0 0 200 350" class="human-body">
+                    <span>Отзад / Back</span>
+                    <svg viewBox="0 0 200 350" class="human-body" id="body-back">
                         <path d="M100,20 Q120,20 120,45 Q120,70 100,70 Q80,70 80,45 Q80,20 100,20" fill="#333"/>
                         <path id="upperback" class="muscle-segment" d="M80,72 L120,72 L135,100 L65,100 Z" onclick="selectMuscle('upperback')" />
                         <path id="lats_l" class="muscle-segment" d="M65,105 Q95,105 95,155 L70,155 Q60,130 65,105 Z" onclick="selectMuscle('lats')" />
@@ -58,14 +61,24 @@
             </div>
             <div id="info-card" class="info-card">
                 <h1>Muscle Atlas Pro</h1>
-                <p>Кликнете върху мускул за подробен план и техника.</p>
+                <p>Кликнете върху мускулна група за пълен анализ, упражнения и техника.</p>
+            </div>
+            
+            <div id="stats-container" class="stats-card" style="display:none;">
+                <h3>МУСКУЛЕН КАПАЦИТЕТ / CAPACITY</h3>
+                <div class="stat-bar"><span class="label">Сила / Strength</span><div class="bar-bg"><div id="bar-strength" class="bar-fill"></div></div></div>
+                <div class="stat-bar"><span class="label">Хипертрофия / Volume</span><div class="bar-bg"><div id="bar-volume" class="bar-fill"></div></div></div>
             </div>
         </div>
 
         <div class="sidebar-right">
-            <h3>ПРО СЪВЕТИ / TIPS</h3>
-            <div id="tips-container" class="tips-box">
-                Изберете мускулна група, за да видите важни бележки тук.
+            <div class="sidebar-section">
+                <h3 class="accent-title">СЪВЕТИ / TIPS</h3>
+                <div id="tips-container">Изберете мускул...</div>
+            </div>
+            <div class="sidebar-section">
+                <h3 class="error-title">ГРЕШКИ / MISTAKES ❌</h3>
+                <div id="mistakes-container">Изберете мускул...</div>
             </div>
         </div>
     </div>
