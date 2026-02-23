@@ -3,102 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muscle Atlas Ultimate - Всичко в едно</title>
+    <title>Muscle Atlas Master Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="dark-theme">
     <div class="app-container">
         <div class="sidebar-left">
-            <div class="header-box">
+            <div class="header-top">
                 <h2 class="logo">Muscle<span>Atlas</span></h2>
-                <button id="theme-toggle" onclick="toggleTheme()">🌓</button>
+                <button id="theme-toggle" onclick="toggleTheme()" title="Смени темата">🌓</button>
             </div>
-            
-            <div class="anatomy-scroll">
+            <div class="anatomy-box">
                 <div class="view-container">
-                    <span class="label">АНАТОМИЯ - ПРЕДНА ЧАСТ</span>
+                    <span>Отпред / Front</span>
                     <svg viewBox="0 0 200 350" class="human-body">
-                        <path id="shoulders" class="muscle-segment" d="M55,75 Q65,70 72,80 L68,95 Q55,95 55,80 M145,75 Q135,70 128,80 L132,95 Q145,95 145,80" onclick="selectMuscle('shoulders')" />
+                        <path d="M100,20 Q120,20 120,45 Q120,70 100,70 Q80,70 80,45 Q80,20 100,20" fill="#333"/>
+                        <path id="traps_front" class="muscle-segment" d="M90,50 L110,50 L108,70 L92,70 Z" onclick="selectMuscle('traps')" />
+                        
                         <path id="chest" class="muscle-segment" d="M72,75 Q100,65 128,75 L132,105 Q100,115 68,105 Z" onclick="selectMuscle('chest')" />
-                        <path id="abs" class="muscle-segment" d="M75,110 L125,110 L120,185 L80,185 Z" onclick="selectMuscle('abs')" />
-                        <path id="biceps" class="muscle-segment" d="M52,110 Q48,135 55,160 L65,160 M148,110 Q152,135 145,160 L135,160" onclick="selectMuscle('biceps')" />
-                        <path id="forearms" class="muscle-segment" d="M55,165 L45,220 L55,220 M145,165 L155,220 L145,220" onclick="selectMuscle('forearms')" />
-                        <path id="quads" class="muscle-segment" d="M75,190 Q98,190 95,280 L70,280 M125,190 Q102,190 105,280 L130,280" onclick="selectMuscle('quads')" />
+                        <path id="abs" class="muscle-segment" d="M75,110 L125,110 L120,180 L80,180 Z" onclick="selectMuscle('abs')" />
+                        
+                        <path id="shoulders_front_l" class="muscle-segment" d="M55,75 Q65,70 72,80 L68,95 Q55,95 55,80 Z" onclick="selectMuscle('shoulders_front')" />
+                        <path id="shoulders_front_r" class="muscle-segment" d="M145,75 Q135,70 128,80 L132,95 Q145,95 145,80 Z" onclick="selectMuscle('shoulders_front')" />
+                        <path id="shoulders_side_l" class="muscle-segment" d="M50,85 Q45,100 55,110 L60,100 Z" onclick="selectMuscle('shoulders_side')" />
+                        <path id="shoulders_side_r" class="muscle-segment" d="M150,85 Q155,100 145,110 L140,100 Z" onclick="selectMuscle('shoulders_side')" />
+                        
+                        <path id="biceps_l" class="muscle-segment" d="M52,110 Q48,130 55,150 L65,150 Q70,130 65,110 Z" onclick="selectMuscle('biceps')" />
+                        <path id="biceps_r" class="muscle-segment" d="M148,110 Q152,130 145,150 L135,150 Q130,130 135,110 Z" onclick="selectMuscle('biceps')" />
+                        <path id="forearms_l" class="muscle-segment" d="M55,155 Q50,180 60,200 L70,200 Q75,180 65,155 Z" onclick="selectMuscle('forearms')" />
+                        <path id="forearms_r" class="muscle-segment" d="M145,155 Q150,180 140,200 L130,200 Q125,180 135,155 Z" onclick="selectMuscle('forearms')" />
+                        
+                        <path id="quads_l" class="muscle-segment" d="M75,185 Q100,185 98,240 L95,290 Q75,290 70,240 Z" onclick="selectMuscle('quads')" />
+                        <path id="quads_r" class="muscle-segment" d="M125,185 Q100,185 102,240 L105,290 Q125,290 130,240 Z" onclick="selectMuscle('quads')" />
                     </svg>
                 </div>
-                
                 <div class="view-container">
-                    <span class="label">АНАТОМИЯ - ЗАДНА ЧАСТ</span>
+                    <span>Отзад / Back</span>
                     <svg viewBox="0 0 200 350" class="human-body">
-                        <path id="traps" class="muscle-segment" d="M100,70 L130,90 L100,125 L70,90 Z" onclick="selectMuscle('traps')" />
-                        <path id="lats" class="muscle-segment" d="M70,105 Q55,115 65,165 L95,160 Q95,130 100,120 M130,105 Q145,115 135,165 L105,160 Q105,130 100,120" onclick="selectMuscle('lats')" />
-                        <path id="triceps" class="muscle-segment" d="M50,110 Q42,145 58,165 L65,155 M150,110 Q158,145 142,165 L135,155" onclick="selectMuscle('triceps')" />
-                        <path id="lowerback" class="muscle-segment" d="M85,165 L115,165 L112,215 L88,215 Z" onclick="selectMuscle('lowerback')" />
-                        <path id="glutes" class="muscle-segment" d="M75,215 Q100,205 125,215 Q135,260 100,265 Q65,260 75,215 Z" onclick="selectMuscle('glutes')" />
-                        <path id="hamstrings" class="muscle-segment" d="M75,265 L95,265 L92,320 L72,320 M105,265 L125,265 L128,320 L108,320" onclick="selectMuscle('hamstrings')" />
-                        <path id="calves" class="muscle-segment" d="M80,320 L95,320 L95,345 L85,345 Z M105,320 L120,320 L115,345 L105,345 Z" onclick="selectMuscle('calves')" />
+                        <path d="M100,20 Q120,20 120,45 Q120,70 100,70 Q80,70 80,45 Q80,20 100,20" fill="#333"/>
+                        
+                        <path id="traps" class="muscle-segment" d="M85,72 L115,72 L130,95 L70,95 Z" onclick="selectMuscle('traps')" />
+                        <path id="shoulders_rear_l" class="muscle-segment" d="M55,80 Q50,95 62,105 L65,95 Z" onclick="selectMuscle('shoulders_rear')" />
+                        <path id="shoulders_rear_r" class="muscle-segment" d="M145,80 Q150,95 138,105 L135,95 Z" onclick="selectMuscle('shoulders_rear')" />
+                        <path id="lats_l" class="muscle-segment" d="M65,100 Q95,100 95,150 L75,150 Z" onclick="selectMuscle('lats')" />
+                        <path id="lats_r" class="muscle-segment" d="M135,100 Q105,100 105,150 L125,150 Z" onclick="selectMuscle('lats')" />
+                        <path id="lowerback" class="muscle-segment" d="M75,150 L125,150 L120,210 L80,210 Z" onclick="selectMuscle('lowerback')" />
+                        
+                        <path id="triceps_l" class="muscle-segment" d="M50,110 Q45,135 55,155 L65,150 Z" onclick="selectMuscle('triceps')" />
+                        <path id="triceps_r" class="muscle-segment" d="M150,110 Q155,135 145,155 L135,150 Z" onclick="selectMuscle('triceps')" />
+                        
+                        <path id="glutes" class="muscle-segment" d="M75,210 Q100,205 125,210 Q130,250 100,250 Q70,250 75,210 Z" onclick="selectMuscle('glutes')" />
+                        <path id="hamstrings_l" class="muscle-segment" d="M75,255 L95,255 L92,305 L72,305 Z" onclick="selectMuscle('hamstrings')" />
+                        <path id="hamstrings_r" class="muscle-segment" d="M105,255 L125,255 L128,305 L108,305 Z" onclick="selectMuscle('hamstrings')" />
+                        <path id="calves_l" class="muscle-segment" d="M75,310 L95,310 L90,345 L80,345 Z" onclick="selectMuscle('calves')" />
+                        <path id="calves_r" class="muscle-segment" d="M105,310 L125,310 L120,345 L110,345 Z" onclick="selectMuscle('calves')" />
                     </svg>
                 </div>
             </div>
         </div>
 
         <div class="main-content">
-            <div class="action-bar">
-                <div class="tabs">
-                    <button id="tab-gym" class="tab-btn active" onclick="setMode('gym')">ЗАЛА</button>
-                    <button id="tab-home" class="tab-btn" onclick="setMode('home')">ВКЪЩИ</button>
-                    <button id="tab-stretch" class="tab-btn" onclick="setMode('stretch')">СТРЕЧИНГ</button>
-                </div>
-                <select id="equip-filter" class="styled-select" onchange="updateUI()">
-                    <option value="all">Всички уреди</option>
-                    <option value="barbell">Щанга</option>
-                    <option value="dumbbell">Дъмбели</option>
-                    <option value="machine">Машини</option>
-                    <option value="body">Тегло</option>
-                </select>
+            <div class="tabs">
+                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')">ЗАЛА / GYM</button>
+                <button id="btn-home" class="tab-btn" onclick="setMode('home')">ВКЪЩИ / HOME</button>
             </div>
-
-            <div id="exercise-display" class="glass-card">
-                <div id="intro-msg">
-                    <h1>Здравей, Атлет!</h1>
-                    <p>Избери мускулна група отляво, за да заредиш базата данни.</p>
-                </div>
-                <div id="exercise-content" style="display:none;">
-                    <div id="demo-frame" class="gif-box">
-                        <img id="main-gif" src="" alt="Exercise Demo">
-                    </div>
-                    <div id="list-holder"></div>
-                </div>
+            <div id="info-card" class="info-card">
+                <h1>Muscle Atlas Ultimate</h1>
+                <p>Изберете мускулна група от модела вляво, за да започнете своя анализ.</p>
             </div>
-
-            <div id="stats-panel" class="glass-card" style="display:none;">
-                <div class="stat-row">
-                    <label>СИЛОВ ПОТЕНЦИАЛ</label>
-                    <div class="bar-container"><div id="bar-strength" class="bar-fill"></div></div>
-                </div>
-                <div class="stat-row">
-                    <label>ХИПЕРТРОФИЯ (ОБЕМ)</label>
-                    <div class="bar-container"><div id="bar-volume" class="bar-fill blue"></div></div>
-                </div>
+            <div id="stats-container" class="stats-card" style="display:none;">
+                <h3>МУСКУЛЕН КАПАЦИТЕТ / CAPACITY</h3>
+                <div class="stat-bar"><span class="label">Сила / Strength</span><div class="bar-bg"><div id="bar-strength" class="bar-fill"></div></div></div>
+                <div class="stat-bar"><span class="label">Обем / Hypertrophy</span><div class="bar-bg"><div id="bar-volume" class="bar-fill"></div></div></div>
             </div>
         </div>
 
         <div class="sidebar-right">
-            <div id="anatomy-details" class="info-card science">
-                <h3 class="accent">АНАТОМИЯ</h3>
-                <h4 id="lat-title"></h4>
-                <div class="muscle-viz"></div>
+            <div class="sidebar-section">
+                <h3 class="accent-title">СЪВЕТИ / TIPS 💡</h3>
+                <div id="tips-container">Изберете група...</div>
             </div>
-            
-            <div class="info-card">
-                <h3 class="accent-tips">ПРОФЕСИОНАЛНИ СЪВЕТИ</h3>
-                <ul id="tips-list"></ul>
-            </div>
-
-            <div class="info-card">
-                <h3 class="accent-error">КРИТИЧНИ ГРЕШКИ</h3>
-                <ul id="error-list"></ul>
+            <div class="sidebar-section">
+                <h3 class="error-title">ГРЕШКИ / MISTAKES ❌</h3>
+                <div id="mistakes-container">Изберете група...</div>
             </div>
         </div>
     </div>
