@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muscle Atlas Master Pro</title>
+    <title>Muscle Atlas PRO v2.0</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-theme">
     <div class="app-container">
         <div class="sidebar-left">
             <div class="header-top">
-                <h2 class="logo">Muscle<span>Atlas</span></h2>
-                <button id="theme-toggle" onclick="toggleTheme()" title="Смени темата">🌓</button>
+                <h2 class="logo">Muscle<span>Atlas</span> PRO</h2>
+                <button id="theme-toggle" onclick="toggleTheme()">🌓</button>
             </div>
+            
+            <input type="text" id="search-bar" placeholder="🔍 Търси упражнение..." onkeyup="searchExercises()">
+
             <div class="anatomy-box">
                 <div class="view-container">
                     <span>Отпред / Front</span>
@@ -57,33 +60,36 @@
 
         <div class="main-content">
             <div class="tabs">
-                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')">ЗАЛА</button>
-                <button id="btn-home" class="tab-btn" onclick="setMode('home')">ВКЪЩИ</button>
-                <button id="btn-info" class="tab-btn" onclick="setMode('info')">АНАТОМИЯ📖</button>
-                <button id="btn-stretch" class="tab-btn" onclick="setMode('stretch')">СТРЕЧИНГ🧘</button>
+                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')">ЗАЛА 🏋️</button>
+                <button id="btn-home" class="tab-btn" onclick="setMode('home')">ВКЪЩИ 🏠</button>
+                <button id="btn-info" class="tab-btn" onclick="setMode('info')">АНАТОМИЯ 📖</button>
+                <button id="btn-stretch" class="tab-btn" onclick="setMode('stretch')">СТРЕЧИНГ 🧘</button>
             </div>
             
             <div id="info-card" class="info-card">
-                <h1>Muscle Atlas Ultimate</h1>
-                <p>Изберете мускулна група от модела вляво.</p>
+                <h1>Muscle Atlas PRO</h1>
+                <p>Кликнете върху мускул от модела, за да видите упражнения, анатомия и съвети за напреднали.</p>
             </div>
 
             <div id="extra-info" class="info-card" style="display:none;"></div>
 
             <div id="stats-container" class="stats-card" style="display:none;">
-                <h3>МУСКУЛЕН КАПАЦИТЕТ</h3>
+                <div class="stats-header">
+                    <h3>МУСКУЛЕН КАПАЦИТЕТ</h3>
+                    <span id="risk-badge">НИСЪК РИСК</span>
+                </div>
                 <div class="stat-bar"><span class="label">Сила</span><div class="bar-bg"><div id="bar-strength" class="bar-fill"></div></div></div>
-                <div class="stat-bar"><span class="label">Обем</span><div class="bar-bg"><div id="bar-volume" class="bar-fill"></div></div></div>
+                <div class="stat-bar"><span class="label">Хипертрофия</span><div class="bar-bg"><div id="bar-volume" class="bar-fill"></div></div></div>
             </div>
         </div>
 
         <div class="sidebar-right">
             <div class="sidebar-section">
-                <h3 class="accent-title">СЪВЕТИ 💡</h3>
+                <h3 class="accent-title">СЪВЕТИ ЗА ЕКСПЕРТИ 💡</h3>
                 <div id="tips-container">Изберете група...</div>
             </div>
             <div class="sidebar-section">
-                <h3 class="error-title">ГРЕШКИ ❌</h3>
+                <h3 class="error-title">КРИТИЧНИ ГРЕШКИ ❌</h3>
                 <div id="mistakes-container">Изберете група...</div>
             </div>
         </div>
