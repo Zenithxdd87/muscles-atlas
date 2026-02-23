@@ -83,3 +83,9 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-app)
 .tip-item { border-left-color: var(--accent); }
 .mistake-item { border-left-color: var(--error); background: rgba(255, 77, 77, 0.05); }
 .mistake-item span { color: var(--error); font-weight: bold; margin-right: 5px; }
+.muscle-segment {
+    transition: 0.25s;
+}
+.muscle-segment:hover {
+    filter: drop-shadow(0 0 10px rgba(0,210,255,0.7));
+}
