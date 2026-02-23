@@ -311,3 +311,37 @@ function toggleTheme() {
 document.addEventListener("DOMContentLoaded", () => {
     // По подразбиране можем да оставим празно, докато потребителят не кликне
 });
+// Тема
+function toggleTheme() {
+    document.body.classList.toggle("light-theme");
+}
+
+// Избор мускул
+let activeMuscle = null;
+function selectMuscle(muscle) {
+    document.querySelectorAll('.muscle-segment').forEach(el => el.classList.remove('active-muscle'));
+    activeMuscle = muscle;
+    document.querySelectorAll('.muscle-segment[id*="'+muscle+'"]').forEach(el => el.classList.add('active-muscle'));
+
+    // info card
+    const info = document.getElementById('info-card');
+    info.innerHTML = `<h1>${muscle.toUpperCase()}</h1><p>Информация и съвети за ${muscle}</p>`;
+
+    // stats
+    document.getElementById('stats-container').style.display='block';
+    document.getElementById('bar-strength').style.width=Math.floor(Math.random()*100)+'%';
+    document.getElementById('bar-volume').style.width=Math.floor(Math.random()*100)+'%';
+
+    // tips и mistakes
+    const tips = document.getElementById('tips-container');
+    const mistakes = document.getElementById('mistakes-container');
+    tips.innerHTML = `<div class="tip-item">Съвет за ${muscle}</div>`;
+    mistakes.innerHTML = `<div class="mistake-item"><span>Грешка:</span> Често правят грешка при ${muscle}</div>`;
+}
+
+// Tabs
+function setMode(mode) {
+    document.getElementById('btn-gym').classList.remove('active');
+    document.getElementById('btn-home').classList.remove('active');
+    document.getElementById('btn-'+mode).classList.add('active');
+}
