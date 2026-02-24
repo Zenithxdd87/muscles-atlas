@@ -11,21 +11,22 @@
         <div class="sidebar-left">
             <div class="header-top">
                 <h2 class="logo">Muscle<span>Atlas</span> PRO</h2>
-                <button id="theme-toggle" onclick="toggleTheme()">🌓</button>
+                <div class="header-controls">
+                    <button id="lang-toggle" onclick="toggleLanguage()" style="background:none; border:none; font-size:20px; cursor:pointer; margin-right:10px; padding:5px;">🌍</button>
+                    <button id="theme-toggle" onclick="toggleTheme()" style="background:none; border:none; font-size:20px; cursor:pointer; padding:5px;">🌓</button>
+                </div>
             </div>
             
             <input type="text" id="search-bar" placeholder="🔍 Search Exercise..." onkeyup="searchExercises()">
 
             <div class="anatomy-box">
                 <div class="view-container">
-                    <span>Front View</span>
+                    <span id="view-front">Front View</span>
                     <svg viewBox="0 0 200 400" class="human-body">
                         <!-- Head -->
                         <circle cx="100" cy="30" r="20" fill="#d4a574"/>
                         <!-- Neck -->
                         <rect x="95" y="50" width="10" height="15" fill="#d4a574"/>
-                        <!-- Torso -->
-                        <rect x="70" y="65" width="60" height="80" fill="none" stroke="#333" stroke-width="1"/>
                         <!-- Chest -->
                         <path id="chest" class="muscle-segment" d="M72,70 Q100,60 128,70 L125,110 Q100,118 75,110 Z" onclick="selectMuscle('chest')" />
                         <!-- Traps Front -->
@@ -59,7 +60,7 @@
                     </svg>
                 </div>
                 <div class="view-container">
-                    <span>Back View</span>
+                    <span id="view-back">Back View</span>
                     <svg viewBox="0 0 200 400" class="human-body">
                         <!-- Head -->
                         <circle cx="100" cy="30" r="20" fill="#d4a574"/>
@@ -98,43 +99,43 @@
 
         <div class="main-content">
             <div class="tabs">
-                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')">GYM 🏋️</button>
-                <button id="btn-home" class="tab-btn" onclick="setMode('home')">HOME 🏠</button>
-                <button id="btn-info" class="tab-btn" onclick="setMode('info')">ANATOMY 📖</button>
-                <button id="btn-stretch" class="tab-btn" onclick="setMode('stretch')">STRETCHING 🧘</button>
+                <button id="btn-gym" class="tab-btn active" onclick="setMode('gym')"><span id="tab-gym">GYM</span> 🏋️</button>
+                <button id="btn-home" class="tab-btn" onclick="setMode('home')"><span id="tab-home">HOME</span> 🏠</button>
+                <button id="btn-info" class="tab-btn" onclick="setMode('info')"><span id="tab-info">ANATOMY</span> 📖</button>
+                <button id="btn-stretch" class="tab-btn" onclick="setMode('stretch')"><span id="tab-stretch">STRETCHING</span> 🧘</button>
             </div>
 
             <div class="equipment-filters" id="equipment-filters">
-                <button class="filter-btn active" onclick="filterEquip('all')">All</button>
-                <button class="filter-btn" onclick="filterEquip('barbell')">🏋️ Barbell</button>
-                <button class="filter-btn" onclick="filterEquip('dumbbell')">💪 Dumbbell</button>
-                <button class="filter-btn" onclick="filterEquip('machine')">⚙️ Machine</button>
-                <button class="filter-btn" onclick="filterEquip('bodyweight')">🤸 Bodyweight</button>
-                <button class="filter-btn" onclick="filterEquip('cable')">🔗 Cable</button>
+                <button class="filter-btn active" onclick="filterEquip('all')" id="filter-all">All</button>
+                <button class="filter-btn" onclick="filterEquip('barbell')" id="filter-barbell">🏋️ Barbell</button>
+                <button class="filter-btn" onclick="filterEquip('dumbbell')" id="filter-dumbbell">💪 Dumbbell</button>
+                <button class="filter-btn" onclick="filterEquip('machine')" id="filter-machine">⚙️ Machine</button>
+                <button class="filter-btn" onclick="filterEquip('bodyweight')" id="filter-bodyweight">🤸 Bodyweight</button>
+                <button class="filter-btn" onclick="filterEquip('cable')" id="filter-cable">🔗 Cable</button>
             </div>
             
             <div id="info-card" class="info-card">
                 <h1>Muscle Atlas PRO</h1>
-                <p>Click on a muscle in the model to view exercises, anatomy, and expert tips.</p>
+                <p id="intro-text">Click on a muscle in the model to view exercises, anatomy, and expert tips.</p>
             </div>
 
             <div id="extra-info" class="info-card" style="display:none;"></div>
 
             <div id="stats-container" class="stats-card" style="display:none;">
                 <div class="stats-header">
-                    <h3>MUSCLE CAPACITY</h3>
+                    <h3 id="capacity-title">MUSCLE CAPACITY</h3>
                     <span id="risk-badge">LOW RISK</span>
                 </div>
-                <div class="stat-bar"><span class="label">Strength</span><div class="bar-bg"><div id="bar-strength" class="bar-fill"></div></div></div>
-                <div class="stat-bar"><span class="label">Hypertrophy</span><div class="bar-bg"><div id="bar-volume" class="bar-fill"></div></div></div>
+                <div class="stat-bar"><span class="label" id="label-strength">Strength</span><div class="bar-bg"><div id="bar-strength" class="bar-fill"></div></div></div>
+                <div class="stat-bar"><span class="label" id="label-hypertrophy">Hypertrophy</span><div class="bar-bg"><div id="bar-volume" class="bar-fill"></div></div></div>
             </div>
 
             <div id="calculator-container" class="stats-card" style="display:none;">
-                <h3>📊 One Rep Max (1RM) Calculator</h3>
+                <h3 id="calc-title">📊 One Rep Max (1RM) Calculator</h3>
                 <div class="calc-inputs">
                     <input type="number" id="calc-weight" placeholder="Weight (kg)" min="1">
                     <input type="number" id="calc-reps" placeholder="Reps" min="1" max="20">
-                    <button onclick="calculate1RM()" style="background:var(--primary); border:none; padding:8px 15px; border-radius:5px; cursor:pointer; color:#000; font-weight:bold;">CALCULATE</button>
+                    <button onclick="calculate1RM()" id="calc-btn" style="background:var(--primary); border:none; padding:8px 15px; border-radius:5px; cursor:pointer; color:#000; font-weight:bold;">CALCULATE</button>
                 </div>
                 <p id="1rm-result" style="margin-top:10px; font-weight:bold; color:var(--accent);">Your 1RM: -- kg</p>
             </div>
@@ -142,15 +143,15 @@
 
         <div class="sidebar-right">
             <div class="sidebar-section">
-                <h3 class="accent-title">EXPERT TIPS 💡</h3>
+                <h3 class="accent-title" id="tips-title">EXPERT TIPS 💡</h3>
                 <div id="tips-container">Select a muscle...</div>
             </div>
             <div class="sidebar-section">
-                <h3 class="error-title">COMMON MISTAKES ❌</h3>
+                <h3 class="error-title" id="mistakes-title">COMMON MISTAKES ❌</h3>
                 <div id="mistakes-container">Select a muscle...</div>
             </div>
             <div class="sidebar-section">
-                <h3 style="color:var(--synergy); border-bottom:2px solid var(--synergy); padding-bottom:8px;">SYNERGY MUSCLES 🔗</h3>
+                <h3 style="color:var(--synergy); border-bottom:2px solid var(--synergy); padding-bottom:8px;" id="synergy-title">SYNERGY MUSCLES 🔗</h3>
                 <div id="synergy-container">Select an exercise...</div>
             </div>
         </div>
