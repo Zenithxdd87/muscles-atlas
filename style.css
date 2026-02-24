@@ -69,3 +69,18 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-app)
 .tip-item, .mistake-item { font-size: 13px; padding: 12px; background: #111; border-radius: 8px; margin-top: 10px; border-left: 4px solid; line-height: 1.4; }
 .tip-item { border-left-color: var(--accent); }
 .mistake-item { border-left-color: var(--error); }
+.equipment-filters { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
+.filter-btn { 
+    background: #222; border: 1px solid var(--border); color: #fff; 
+    padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; transition: 0.2s;
+}
+.filter-btn.active { background: var(--primary); color: #000; font-weight: bold; }
+
+/* Цвят за умора (Heatmap ефект) */
+.fatigued-muscle { fill: #ff9800 !important; filter: drop-shadow(0 0 8px #ff9800); stroke: #fff; }
+
+.calc-inputs { display: flex; gap: 10px; margin-top: 10px; }
+.calc-inputs input { 
+    width: 70px; background: #000; border: 1px solid var(--border); 
+    color: #fff; padding: 8px; border-radius: 5px; 
+}
