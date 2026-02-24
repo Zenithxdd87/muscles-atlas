@@ -1,622 +1,747 @@
 let currentMuscle = null;
 let currentMode = 'gym';
 let currentEquipFilter = 'all';
+let currentLanguage = 'en'; // 'en' or 'bg'
 let fatiguedMuscles = {}; 
 let timerInterval;
 
-// ===== COMPLETE DATABASE WITH ALL EXERCISES IN ENGLISH =====
+// ===== TRANSLATIONS =====
+const translations = {
+    en: {
+        'search-bar': '🔍 Search Exercise...',
+        'view-front': 'Front View',
+        'view-back': 'Back View',
+        'tab-gym': 'GYM',
+        'tab-home': 'HOME',
+        'tab-info': 'ANATOMY',
+        'tab-stretch': 'STRETCHING',
+        'filter-all': 'All',
+        'filter-barbell': '🏋️ Barbell',
+        'filter-dumbbell': '💪 Dumbbell',
+        'filter-machine': '⚙️ Machine',
+        'filter-bodyweight': '🤸 Bodyweight',
+        'filter-cable': '🔗 Cable',
+        'intro-text': 'Click on a muscle in the model to view exercises, anatomy, and expert tips.',
+        'capacity-title': 'MUSCLE CAPACITY',
+        'label-strength': 'Strength',
+        'label-hypertrophy': 'Hypertrophy',
+        'calc-title': '📊 One Rep Max (1RM) Calculator',
+        'calc-btn': 'CALCULATE',
+        'tips-title': 'EXPERT TIPS 💡',
+        'mistakes-title': 'COMMON MISTAKES ❌',
+        'synergy-title': 'SYNERGY MUSCLES 🔗',
+        'select-muscle': 'Select a muscle...',
+        'select-exercise': 'Select an exercise...',
+    },
+    bg: {
+        'search-bar': '🔍 Търси упражнение...',
+        'view-front': 'Отпред',
+        'view-back': 'Отзад',
+        'tab-gym': 'ЗАЛА',
+        'tab-home': 'ВКЪЩИ',
+        'tab-info': 'АНАТОМИЯ',
+        'tab-stretch': 'СТРЕЧИНГ',
+        'filter-all': 'Всички',
+        'filter-barbell': '🏋️ Лост',
+        'filter-dumbbell': '💪 Дъмбели',
+        'filter-machine': '⚙️ Машина',
+        'filter-bodyweight': '🤸 Собствено тегло',
+        'filter-cable': '🔗 Кабел',
+        'intro-text': 'Кликнете върху мускул от модела, за да видите упражнения, анатомия и съвети.',
+        'capacity-title': 'МУСКУЛЕН КАПАЦИТЕТ',
+        'label-strength': 'Сила',
+        'label-hypertrophy': 'Хипертрофия',
+        'calc-title': '📊 Калкулатор Максимална Сила (1RM)',
+        'calc-btn': 'СМЕТНИ',
+        'tips-title': 'СЪВЕТИ ЗА ЕКСПЕРТИ 💡',
+        'mistakes-title': 'ТИПИЧНИ ГРЕШКИ ❌',
+        'synergy-title': 'СИНЕРГИЯ НА МУСКУЛИ 🔗',
+        'select-muscle': 'Изберете мускул...',
+        'select-exercise': 'Изберете упражнение...',
+    }
+};
+
+// ===== COMPLETE BILINGUAL DATABASE =====
 const data = {
     chest: {
-        title: "Chest (Pectoralis Major)",
-        desc: "Primary muscle group for horizontal pushing movements. Consists of Pectoralis Major and Pectoralis Minor. Essential for upper body strength and power.",
-        risk: "Medium Risk",
+        en: {
+            title: "Chest (Pectoralis Major)",
+            desc: "Primary muscle group for horizontal pushing movements. Largest upper body muscle. Essential for pressing strength.",
+        },
+        bg: {
+            title: "Гърди (Pectoralis Major)",
+            desc: "Основна мускулна група за хоризонтално бутане. Най-голям мускул на горната част на тялото.",
+        },
+        risk: "Medium Risk | Среден Риск",
         gym: [
-            { name: "Barbell Bench Press", equip: "barbell", diff: 3, secondary: ["triceps", "shoulders_front"] },
-            { name: "Incline Barbell Press", equip: "barbell", diff: 3, secondary: ["shoulders_front"] },
-            { name: "Decline Barbell Press", equip: "barbell", diff: 2, secondary: ["triceps"] },
-            { name: "Dumbbell Bench Press", equip: "dumbbell", diff: 2, secondary: ["triceps"] },
-            { name: "Incline Dumbbell Press", equip: "dumbbell", diff: 2, secondary: ["shoulders_front"] },
-            { name: "Dumbbell Flyes", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Chest Press Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Cable Crossover", equip: "cable", diff: 1, secondary: [] },
-            { name: "Pec Deck Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Push-ups", equip: "bodyweight", diff: 2, secondary: ["triceps", "shoulders_front"] },
-            { name: "Incline Push-ups", equip: "bodyweight", diff: 1, secondary: [] },
-            { name: "Decline Push-ups", equip: "bodyweight", diff: 3, secondary: [] },
-            { name: "Cable Machine Squeeze", equip: "cable", diff: 2, secondary: [] },
+            { 
+                en: "Barbell Bench Press",
+                bg: "Бенч преса с лост",
+                equip: "barbell", diff: 3, secondary: ["triceps", "shoulders_front"] 
+            },
+            { 
+                en: "Incline Barbell Press",
+                bg: "Наклонена бенч преса с лост",
+                equip: "barbell", diff: 3, secondary: ["shoulders_front"] 
+            },
+            { 
+                en: "Decline Barbell Press",
+                bg: "Спадаща бенч преса с лост",
+                equip: "barbell", diff: 2, secondary: ["triceps"] 
+            },
+            { 
+                en: "Dumbbell Bench Press",
+                bg: "Бенч преса с дъмбели",
+                equip: "dumbbell", diff: 2, secondary: ["triceps"] 
+            },
+            { 
+                en: "Incline Dumbbell Press",
+                bg: "Наклонена бенч преса с дъмбели",
+                equip: "dumbbell", diff: 2, secondary: ["shoulders_front"] 
+            },
+            { 
+                en: "Dumbbell Flyes",
+                bg: "Разтваряне с дъмбели",
+                equip: "dumbbell", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Chest Press Machine",
+                bg: "Машина за гръди преса",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Cable Crossover",
+                bg: "Кросоувър на скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Pec Deck Machine",
+                bg: "Машина Pec Deck",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Smith Machine Press",
+                bg: "Преса на машина Смит",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Machine Chest Fly",
+                bg: "Машинно разтваряне на гърди",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Isometric Chest Press",
+                bg: "Изометрична преса на гърди",
+                equip: "cable", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Plate-Loaded Press",
+                bg: "Преса със стаклени дискове",
+                equip: "machine", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Barbell Floor Press",
+                bg: "Преса на пода с лост",
+                equip: "barbell", diff: 3, secondary: [] 
+            },
+            { 
+                en: "Board Press",
+                bg: "Преса със дъска",
+                equip: "barbell", diff: 2, secondary: [] 
+            },
         ],
         home: [
-            { name: "Standard Push-ups", equip: "bodyweight", diff: 1, secondary: ["triceps"] },
-            { name: "Wide Push-ups", equip: "bodyweight", diff: 2, secondary: [] },
-            { name: "Narrow Push-ups", equip: "bodyweight", diff: 2, secondary: ["triceps"] },
-            { name: "Archer Push-ups", equip: "bodyweight", diff: 3, secondary: [] },
+            { 
+                en: "Standard Push-ups",
+                bg: "Стандартни кофички",
+                equip: "bodyweight", diff: 1, secondary: ["triceps"] 
+            },
+            { 
+                en: "Wide Push-ups",
+                bg: "Широки кофички",
+                equip: "bodyweight", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Narrow Push-ups",
+                bg: "Тесни кофички",
+                equip: "bodyweight", diff: 2, secondary: ["triceps"] 
+            },
+            { 
+                en: "Archer Push-ups",
+                bg: "Асиметрични кофички",
+                equip: "bodyweight", diff: 3, secondary: [] 
+            },
+            { 
+                en: "Incline Push-ups",
+                bg: "Наклонени кофички",
+                equip: "bodyweight", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Decline Push-ups",
+                bg: "Спадащи кофички",
+                equip: "bodyweight", diff: 3, secondary: [] 
+            },
         ],
         stretching: [
-            { name: "Chest Doorway Stretch", goal: "30 sec" },
-            { name: "Reverse Chest Stretch", goal: "45 sec" },
+            { 
+                en: "Chest Doorway Stretch",
+                bg: "Разтягане на каса на врата",
+                goal: "30 sec | 30 сек" 
+            },
+            { 
+                en: "Reverse Chest Stretch",
+                bg: "Обратно разтягане на гърди",
+                goal: "45 sec | 45 сек" 
+            },
+            { 
+                en: "Lying Chest Stretch",
+                bg: "Разтягане на гърди в лежачо положение",
+                goal: "30 sec | 30 сек" 
+            },
         ],
         stats: { strength: 90, volume: 85 },
-        tips: [
+        tips_en: [
             "Retract and depress scapula during movement.",
             "Keep elbows at 45 degrees from body.",
             "Maintain full range of motion.",
             "Control the eccentric (lowering) phase.",
             "Mind the bar path - should be vertical."
         ],
-        mistakes: [
+        tips_bg: [
+            "Събирайте лопатките и спускайте ги по време на движение.",
+            "Держите лактите под ъгъл от 45 градуса от тялото.",
+            "Поддържайте пълния обсег на движението.",
+            "Контролирайте еденцентричната (спускащата) фаза.",
+            "Следете пътя на лоста - трябва да бъде вертикален."
+        ],
+        mistakes_en: [
             "Bouncing the bar off chest.",
             "Flaring elbows excessively.",
             "Lack of control during descent.",
             "Insufficient range of motion.",
             "Uneven shoulder height during press."
+        ],
+        mistakes_bg: [
+            "Отскачане на лоста от гърди.",
+            "Прекалено разтворени лакти.",
+            "Липса на контрол при спускането.",
+            "Недостатъчен обсег на движението.",
+            "Неравна височина на раменете по време на преса."
         ]
     },
 
     traps: {
-        title: "Trapezius",
-        desc: "Large muscle group on upper back, consisting of three parts: upper, middle, and lower trapezius. Important for shoulder stability and posture.",
-        risk: "Low Risk",
+        en: {
+            title: "Trapezius",
+            desc: "Large muscle group on upper back. Consists of three parts: upper, middle, and lower trapezius. Important for shoulder stability.",
+        },
+        bg: {
+            title: "Трапец",
+            desc: "Голяма мускулна група на горния гръб. Состои се от три части: горен, среден и долен трапец.",
+        },
+        risk: "Low Risk | Нисък Риск",
         gym: [
-            { name: "Barbell Shrugs", equip: "barbell", diff: 1, secondary: [] },
-            { name: "Dumbbell Shrugs", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Machine Shrugs", equip: "machine", diff: 1, secondary: [] },
-            { name: "Hanging Shrugs", equip: "bodyweight", diff: 2, secondary: ["forearms"] },
-            { name: "Farmer's Walk", equip: "dumbbell", diff: 1, secondary: ["forearms"] },
-            { name: "Lateral Dumbbell Raise", equip: "dumbbell", diff: 1, secondary: ["shoulders_side"] },
-            { name: "Smith Machine Shrugs", equip: "machine", diff: 1, secondary: [] },
+            { 
+                en: "Barbell Shrugs",
+                bg: "Повдигане на рамене с лост",
+                equip: "barbell", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Dumbbell Shrugs",
+                bg: "Повдигане на рамене с дъмбели",
+                equip: "dumbbell", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Machine Shrugs",
+                bg: "Повдигане на машина",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Smith Machine Shrugs",
+                bg: "Повдигане на машина Смит",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Hanging Shrugs",
+                bg: "Повдигане в висене",
+                equip: "bodyweight", diff: 2, secondary: ["forearms"] 
+            },
+            { 
+                en: "Farmer's Walk",
+                bg: "Фермерска разходка",
+                equip: "dumbbell", diff: 1, secondary: ["forearms"] 
+            },
+            { 
+                en: "Cable Shrugs",
+                bg: "Повдигане със скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Trap Bar Deadlift",
+                bg: "Мъртва тяга със специална щанга",
+                equip: "barbell", diff: 2, secondary: ["lowerback"] 
+            },
+            { 
+                en: "Shoulder Shrug Machine",
+                bg: "Специална машина за трапец",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Upright Rows",
+                bg: "Вертикално гребане",
+                equip: "barbell", diff: 2, secondary: ["biceps"] 
+            },
+            { 
+                en: "Cable Upright Rows",
+                bg: "Вертикално гребане със скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Single-Arm Dumbbell Shrugs",
+                bg: "Повдигане на едно рамо с дъмбел",
+                equip: "dumbbell", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Lateral Shrugs",
+                bg: "Странични повдигания",
+                equip: "dumbbell", diff: 1, secondary: ["shoulders_side"] 
+            },
         ],
         home: [
-            { name: "Loaded Backpack Shrugs", equip: "bodyweight", diff: 1, secondary: [] },
+            { 
+                en: "Loaded Backpack Shrugs",
+                bg: "Повдигане на раница",
+                equip: "bodyweight", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Resistance Band Shrugs",
+                bg: "Повдигане със еластична лента",
+                equip: "bodyweight", diff: 1, secondary: [] 
+            },
         ],
         stretching: [
-            { name: "Neck Side Stretch", goal: "20 sec" },
-            { name: "Cross-Body Trap Stretch", goal: "30 sec" },
+            { 
+                en: "Neck Side Stretch",
+                bg: "Разтягане на врата встрани",
+                goal: "20 sec | 20 сек" 
+            },
+            { 
+                en: "Cross-Body Trap Stretch",
+                bg: "Разтягане на трапец попречно",
+                goal: "30 sec | 30 сек" 
+            },
         ],
         stats: { strength: 80, volume: 70 },
-        tips: [
+        tips_en: [
             "Move vertically, do not rotate shoulders.",
             "Hold for a second at the top contraction.",
             "Use full range of motion.",
-            "Keep shoulders relaxed in the stretched position."
+            "Keep shoulders relaxed in the stretched position.",
+            "Avoid using momentum."
         ],
-        mistakes: [
+        tips_bg: [
+            "Движете се вертикално, не въртете раменете.",
+            "Задържете за секунда в горната позиция.",
+            "Използвайте пълен обсег на движението.",
+            "Держите раменете разслабени в разтегнатата позиция.",
+            "Избягвайте използване на импулс."
+        ],
+        mistakes_en: [
             "Using excessive weight with poor form.",
             "Rotating shoulders - invalid technique.",
             "Insufficient contraction at the top.",
-            "Using momentum instead of control."
+            "Using momentum instead of control.",
+            "Uneven shoulder height."
+        ],
+        mistakes_bg: [
+            "Използване на прекалено голяма тежест с лоша техника.",
+            "Въртене на раменете - невалидна техника.",
+            "Недостатъчна контракция в горната позиция.",
+            "Използване на импулс вместо контрол.",
+            "Неравна височина на раменете."
         ]
     },
 
     shoulders_front: {
-        title: "Front Deltoid",
-        desc: "Front part of the deltoid muscle. Active in pressing movements and front raises. Key for shoulder width and pressing power.",
-        risk: "Medium Risk",
+        en: {
+            title: "Front Deltoid",
+            desc: "Front part of the deltoid muscle. Active in pressing movements and front raises. Key for shoulder width and pressing power.",
+        },
+        bg: {
+            title: "Предно рамо",
+            desc: "Предната част на делтавидния мускул. Активна при бутащи движения и повдигания напред.",
+        },
+        risk: "Medium Risk | Среден Риск",
         gym: [
-            { name: "Military Press", equip: "barbell", diff: 3, secondary: ["triceps", "shoulders_side"] },
-            { name: "Dumbbell Military Press", equip: "dumbbell", diff: 2, secondary: ["triceps"] },
-            { name: "Shoulder Press Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Cable Shoulder Press", equip: "cable", diff: 2, secondary: [] },
-            { name: "Barbell Front Raise", equip: "barbell", diff: 2, secondary: [] },
-            { name: "Dumbbell Front Raise", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Cable Front Raise", equip: "cable", diff: 1, secondary: [] },
-            { name: "Machine Front Raise", equip: "machine", diff: 1, secondary: [] },
-            { name: "Kettlebell Thruster", equip: "dumbbell", diff: 3, secondary: ["quads"] },
+            { 
+                en: "Military Press",
+                bg: "Военна преса",
+                equip: "barbell", diff: 3, secondary: ["triceps", "shoulders_side"] 
+            },
+            { 
+                en: "Dumbbell Military Press",
+                bg: "Военна преса с дъмбели",
+                equip: "dumbbell", diff: 2, secondary: ["triceps"] 
+            },
+            { 
+                en: "Shoulder Press Machine",
+                bg: "Машина за преса на рамене",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Cable Shoulder Press",
+                bg: "Преса на рамене със скрипец",
+                equip: "cable", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Barbell Front Raise",
+                bg: "Повдигане напред с лост",
+                equip: "barbell", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Dumbbell Front Raise",
+                bg: "Повдигане напред с дъмбели",
+                equip: "dumbbell", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Cable Front Raise",
+                bg: "Повдигане напред със скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Machine Front Raise",
+                bg: "Повдигане напред на машина",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Kettlebell Thruster",
+                bg: "Плаче с гиря",
+                equip: "dumbbell", diff: 3, secondary: ["quads"] 
+            },
+            { 
+                en: "Landmine Press",
+                bg: "Преса на Landmine машина",
+                equip: "barbell", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Smith Machine Shoulder Press",
+                bg: "Преса на машина Смит",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Incline Barbell Press",
+                bg: "Наклонена преса с лост",
+                equip: "barbell", diff: 3, secondary: ["chest"] 
+            },
+            { 
+                en: "Plate Loaded Shoulder Press",
+                bg: "Преса със стаклени дискове",
+                equip: "machine", diff: 2, secondary: [] 
+            },
         ],
         home: [
-            { name: "Pike Push-ups", equip: "bodyweight", diff: 2, secondary: [] },
-            { name: "Bodyweight Shoulder Press", equip: "bodyweight", diff: 2, secondary: [] },
+            { 
+                en: "Pike Push-ups",
+                bg: "Пийк опори",
+                equip: "bodyweight", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Bodyweight Shoulder Press",
+                bg: "Преса със собствено тегло",
+                equip: "bodyweight", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Wall-Assisted Push-ups",
+                bg: "Кофички с помощ на стена",
+                equip: "bodyweight", diff: 1, secondary: [] 
+            },
         ],
         stretching: [
-            { name: "Hands Behind Back Stretch", goal: "30 sec" },
-            { name: "Overhead Shoulder Stretch", goal: "30 sec" },
+            { 
+                en: "Hands Behind Back Stretch",
+                bg: "Ръце зад гърба разтягане",
+                goal: "30 sec | 30 сек" 
+            },
+            { 
+                en: "Overhead Shoulder Stretch",
+                bg: "Разтягане над главата",
+                goal: "30 sec | 30 сек" 
+            },
         ],
         stats: { strength: 85, volume: 80 },
-        tips: [
+        tips_en: [
             "Engage core for stability.",
             "Press fully overhead until elbows lock out.",
             "Control the descent phase.",
             "Keep shoulders packed and engaged.",
             "Maintain neutral spine throughout."
         ],
-        mistakes: [
+        tips_bg: [
+            "Включете корема за стабилност.",
+            "Преса напълно над главата до блокиране на лактите.",
+            "Контролирайте фазата на спускане.",
+            "Держите раменете събрани и включени.",
+            "Поддържайте неутрална позиция на гръбнака."
+        ],
+        mistakes_en: [
             "Arching the back excessively.",
             "Insufficient depth in movement.",
             "Using too much weight.",
             "Pressing forward instead of straight up.",
             "Poor core engagement."
+        ],
+        mistakes_bg: [
+            "Прекалено дугинаване на кръста.",
+            "Недостатъчна дълбочина на движението.",
+            "Използване на прекалено голяма тежест.",
+            "Преса напред вместо прави нагоре.",
+            "Слаб ангажман на корема."
         ]
     },
 
     shoulders_side: {
-        title: "Lateral Deltoid",
-        desc: "Side part of the deltoid. Responsible for shoulder width. Most isolated by lateral raise variations.",
-        risk: "Medium Risk",
+        en: {
+            title: "Lateral Deltoid",
+            desc: "Side part of the deltoid. Responsible for shoulder width. Most isolated by lateral raise variations.",
+        },
+        bg: {
+            title: "Странично рамо",
+            desc: "Страничната част на делтавидния мускул. Отговорна за ширина на раменете.",
+        },
+        risk: "Medium Risk | Среден Риск",
         gym: [
-            { name: "Dumbbell Lateral Raise", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Cable Lateral Raise", equip: "cable", diff: 1, secondary: [] },
-            { name: "Machine Lateral Raise", equip: "machine", diff: 1, secondary: [] },
-            { name: "Smith Machine Lateral Raise", equip: "machine", diff: 1, secondary: [] },
-            { name: "Plate Lateral Raise", equip: "dumbbell", diff: 2, secondary: [] },
+            { 
+                en: "Dumbbell Lateral Raise",
+                bg: "Странично повдигане с дъмбели",
+                equip: "dumbbell", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Cable Lateral Raise",
+                bg: "Странично повдигане със скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Machine Lateral Raise",
+                bg: "Машина за странично повдигане",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Smith Machine Lateral Raise",
+                bg: "Странично повдигане на машина Смит",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Plate Lateral Raise",
+                bg: "Странично повдигане със стаклен диск",
+                equip: "dumbbell", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Lever Machine Lateral Raise",
+                bg: "Странично повдигане на машина Lever",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Barbell Lateral Raise",
+                bg: "Странично повдигане с лост",
+                equip: "barbell", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Single-Arm Cable Raise",
+                bg: "Едностранно повдигане със скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Resistance Band Lateral Raise",
+                bg: "Странично повдигане със еластична лента",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Pendulum Lateral Raise",
+                bg: "Маятниково странично повдигане",
+                equip: "machine", diff: 1, secondary: [] 
+            },
         ],
         home: [
-            { name: "Resistance Band Lateral Raise", equip: "bodyweight", diff: 1, secondary: [] },
+            { 
+                en: "Resistance Band Lateral Raise",
+                bg: "Странично повдигане със еластична лента",
+                equip: "bodyweight", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Dumbbell Lateral Raise (Home)",
+                bg: "Странично повдигане с дъмбели (Дома)",
+                equip: "bodyweight", diff: 1, secondary: [] 
+            },
         ],
         stretching: [
-            { name: "Overhead Shoulder Stretch", goal: "30 sec" },
+            { 
+                en: "Overhead Shoulder Stretch",
+                bg: "Разтягане над главата",
+                goal: "30 sec | 30 сек" 
+            },
         ],
         stats: { strength: 70, volume: 75 },
-        tips: [
+        tips_en: [
             "Slight bend in elbows (about 15 degrees).",
             "Elbows should reach higher than hands.",
             "Control the eccentric phase.",
             "Feel the squeeze at the top.",
             "No momentum - strict form."
         ],
-        mistakes: [
+        tips_bg: [
+            "Лекко сгъване на лактите (около 15 градуса).",
+            "Лактите трябва да бъдат по-високо от ръцете.",
+            "Контролирайте еденцентричната фаза.",
+            "Почувствайте свиването в горната позиция.",
+            "Без импулс - строга техника."
+        ],
+        mistakes_en: [
             "Using back instead of shoulders.",
             "Using excessive weight.",
             "Insufficient range of motion.",
             "Momentum-driven movement.",
             "Elbows too high or too low."
+        ],
+        mistakes_bg: [
+            "Използване на гръб вместо рамене.",
+            "Използване на прекалено голяма тежест.",
+            "Недостатъчен обсег на движението.",
+            "Движение с импулс.",
+            "Лактите твърде високо или твърде ниско."
         ]
     },
 
     shoulders_rear: {
-        title: "Rear Deltoid",
-        desc: "Back part of the deltoid. Important for shoulder balance and posture. Often underdeveloped.",
-        risk: "Low Risk",
+        en: {
+            title: "Rear Deltoid",
+            desc: "Back part of the deltoid. Important for shoulder balance and posture. Often underdeveloped muscle.",
+        },
+        bg: {
+            title: "Задно рамо",
+            desc: "Задната част на делтавидния мускул. Важна за баланс на раменете и постура.",
+        },
+        risk: "Low Risk | Нисък Риск",
         gym: [
-            { name: "Reverse Pec Deck", equip: "machine", diff: 1, secondary: [] },
-            { name: "Bent-Over Dumbbell Raise", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Cable Reverse Flyes", equip: "cable", diff: 1, secondary: [] },
-            { name: "Bent-Over Barbell Raise", equip: "barbell", diff: 2, secondary: [] },
-            { name: "Machine Rear Delt Fly", equip: "machine", diff: 1, secondary: [] },
+            { 
+                en: "Reverse Pec Deck",
+                bg: "Обратна Pec Deck машина",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Bent-Over Dumbbell Raise",
+                bg: "Наклонено повдигане с дъмбели",
+                equip: "dumbbell", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Cable Reverse Flyes",
+                bg: "Обратни разтваряния със скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Bent-Over Barbell Raise",
+                bg: "Наклонено повдигане с лост",
+                equip: "barbell", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Machine Rear Delt Fly",
+                bg: "Машина за задно рамо разтваряние",
+                equip: "machine", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Single-Arm Cable Rear Raise",
+                bg: "Едностранно повдигане със скрипец",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Incline Dumbbell Raise",
+                bg: "Наклонено повдигане с дъмбели",
+                equip: "dumbbell", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Face Pulls",
+                bg: "Дърпане към лице",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Resistance Band Pull-Apart",
+                bg: "Дърпане на еластична лента поотделно",
+                equip: "cable", diff: 1, secondary: [] 
+            },
+            { 
+                en: "Smith Machine Rear Raise",
+                bg: "Задно повдигане на машина Смит",
+                equip: "machine", diff: 1, secondary: [] 
+            },
         ],
         home: [
-            { name: "Reverse Flyes (Bodyweight)", equip: "bodyweight", diff: 2, secondary: [] },
+            { 
+                en: "Reverse Flyes (Bodyweight)",
+                bg: "Обратни разтваряния (със собствено тегло)",
+                equip: "bodyweight", diff: 2, secondary: [] 
+            },
+            { 
+                en: "Resistance Band Pull-Apart",
+                bg: "Дърпане със еластична лента",
+                equip: "bodyweight", diff: 1, secondary: [] 
+            },
         ],
         stretching: [
-            { name: "Horizontal Shoulder Stretch", goal: "30 sec" },
+            { 
+                en: "Horizontal Shoulder Stretch",
+                bg: "Хоризонтално разтягане на рамене",
+                goal: "30 sec | 30 сек" 
+            },
         ],
         stats: { strength: 65, volume: 70 },
-        tips: [
+        tips_en: [
             "Elbows at shoulder height.",
             "Focus on scapula retraction.",
             "Control the movement throughout.",
             "Squeeze rear delts at the top.",
             "Avoid using traps."
         ],
-        mistakes: [
+        tips_bg: [
+            "Лактите на височина на раменете.",
+            "Фокусирайте се на събиране на лопатките.",
+            "Контролирайте движението.",
+            "Свивайте задния делт в горната позиция.",
+            "Избягвайте използване на трапец."
+        ],
+        mistakes_en: [
             "Using shoulders instead of elbows.",
             "Using momentum.",
             "Too much weight.",
             "Not achieving full contraction.",
             "Rounding the back."
+        ],
+        mistakes_bg: [
+            "Използване на рамене вместо лакти.",
+            "Използване на импулс.",
+            "Твърде голяма тежест.",
+            "Не достигане на пълна контракция.",
+            "Закръгляне на гръба."
         ]
     },
 
     lats: {
-        title: "Latissimus Dorsi (Lats)",
-        desc: "Largest back muscle. Responsible for vertical pulling and arm adduction. Critical for lat width and strength.",
-        risk: "Low Risk",
+        en: {
+            title: "Latissimus Dorsi (Lats)",
+            desc: "Largest back muscle. Responsible for vertical pulling and arm adduction. Critical for lat width and strength.",
+        },
+        bg: {
+            title: "Широк мускул (Lats)",
+            desc: "Най-голямо мускул на гърба. Отговорен за вертикално дърпане и приведение на ръката.",
+        },
+        risk: "Low Risk | Нисък Риск",
         gym: [
-            { name: "Pull-ups", equip: "bodyweight", diff: 3, secondary: ["biceps"] },
-            { name: "Weighted Pull-ups", equip: "bodyweight", diff: 4, secondary: ["biceps"] },
-            { name: "Chin-ups", equip: "bodyweight", diff: 2, secondary: ["biceps"] },
-            { name: "Lat Pulldown", equip: "cable", diff: 1, secondary: ["biceps"] },
-            { name: "Machine Pulldown", equip: "machine", diff: 1, secondary: [] },
-            { name: "Single-Arm Dumbbell Row", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Barbell Bent-Over Row", equip: "barbell", diff: 3, secondary: ["lowerback"] },
-            { name: "Machine Row", equip: "machine", diff: 1, secondary: [] },
-            { name: "Seated Cable Row", equip: "cable", diff: 1, secondary: [] },
-            { name: "T-Bar Row", equip: "barbell", diff: 2, secondary: ["lowerback"] },
-            { name: "Incline Machine Row", equip: "machine", diff: 1, secondary: [] },
-            { name: "Underhand Lat Pulldown", equip: "cable", diff: 1, secondary: ["biceps"] },
-        ],
-        home: [
-            { name: "Inverted Row", equip: "bodyweight", diff: 2, secondary: [] },
-        ],
-        stretching: [
-            { name: "Child's Pose", goal: "60 sec" },
-            { name: "Latissimus Stretch", goal: "45 sec" },
-        ],
-        stats: { strength: 95, volume: 90 },
-        tips: [
-            "Pull with elbows, not hands.",
-            "Retract scapula at the end of movement.",
-            "Control the eccentric phase.",
-            "Full range of motion is essential.",
-            "Feel the stretch at the top."
-        ],
-        mistakes: [
-            "Swinging the body.",
-            "Pulling with hands instead of elbows.",
-            "Insufficient contraction.",
-            "Using arms too much.",
-            "Not achieving full range."
-        ]
-    },
-
-    lowerback: {
-        title: "Erector Spinae (Lower Back)",
-        desc: "Muscles that extend the spine. Important for stability and proper posture. High injury risk if done incorrectly.",
-        risk: "High Risk",
-        gym: [
-            { name: "Romanian Deadlift", equip: "barbell", diff: 3, secondary: ["hamstrings"] },
-            { name: "Dumbbell Romanian Deadlift", equip: "dumbbell", diff: 2, secondary: ["hamstrings"] },
-            { name: "Back Extension Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Hyperextension", equip: "machine", diff: 2, secondary: ["hamstrings"] },
-            { name: "Good Morning", equip: "barbell", diff: 3, secondary: ["hamstrings"] },
-            { name: "Rack Pulls", equip: "barbell", diff: 2, secondary: ["hamstrings"] },
-        ],
-        home: [
-            { name: "Superman Hold", equip: "bodyweight", diff: 1, secondary: [] },
-            { name: "Single-Leg Glute Bridge", equip: "bodyweight", diff: 2, secondary: ["glutes"] },
-        ],
-        stretching: [
-            { name: "Seated Forward Fold", goal: "45 sec" },
-            { name: "Cat-Cow Stretch", goal: "30 sec" },
-        ],
-        stats: { strength: 80, volume: 70 },
-        tips: [
-            "NEUTRAL SPINE POSITION - CRITICAL!",
-            "Proper breathing during effort.",
-            "Avoid rounded back at all costs.",
-            "Hinge at hips, not lower back.",
-            "Start light to master form."
-        ],
-        mistakes: [
-            "ROUNDED BACK - MOST CRITICAL ERROR!",
-            "Using too much weight.",
-            "Fast movements without control.",
-            "Poor breathing pattern.",
-            "Allowing knees to extend excessively."
-        ]
-    },
-
-    biceps: {
-        title: "Biceps",
-        desc: "Primary elbow flexor muscle. Consists of two heads. Aesthetic muscle that also contributes to pulling strength.",
-        risk: "Low Risk",
-        gym: [
-            { name: "EZ Bar Curl", equip: "barbell", diff: 2, secondary: [] },
-            { name: "Dumbbell Curl", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Cable Curl", equip: "cable", diff: 1, secondary: [] },
-            { name: "Hammer Curl", equip: "dumbbell", diff: 1, secondary: ["forearms"] },
-            { name: "Scott Bench Curl", equip: "barbell", diff: 2, secondary: [] },
-            { name: "Reverse Curl", equip: "barbell", diff: 2, secondary: ["forearms"] },
-            { name: "Cable Concentration Curl", equip: "cable", diff: 1, secondary: [] },
-            { name: "Machine Bicep Curl", equip: "machine", diff: 1, secondary: [] },
-            { name: "Incline Dumbbell Curl", equip: "dumbbell", diff: 2, secondary: [] },
-        ],
-        home: [
-            { name: "Resistance Band Curl", equip: "bodyweight", diff: 1, secondary: [] },
-        ],
-        stretching: [
-            { name: "Bicep Wall Stretch", goal: "30 sec" },
-        ],
-        stats: { strength: 65, volume: 95 },
-        tips: [
-            "Keep elbows fixed to sides.",
-            "Full range of motion essential.",
-            "Control the eccentric phase.",
-            "Feel the contraction at the top.",
-            "No swinging or momentum."
-        ],
-        mistakes: [
-            "Using back for momentum.",
-            "Elbows away from body.",
-            "Insufficient range of motion.",
-            "Too much weight.",
-            "Partial reps."
-        ]
-    },
-
-    triceps: {
-        title: "Triceps",
-        desc: "Primary elbow extensor. Makes up 2/3 of arm mass. Three heads: long, lateral, and medial.",
-        risk: "Low Risk",
-        gym: [
-            { name: "French Press", equip: "barbell", diff: 2, secondary: [] },
-            { name: "Dumbbell French Press", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Rope Pushdown", equip: "cable", diff: 1, secondary: [] },
-            { name: "Tricep Dips", equip: "bodyweight", diff: 2, secondary: ["chest"] },
-            { name: "Weighted Dips", equip: "bodyweight", diff: 3, secondary: ["chest"] },
-            { name: "Overhead Dumbbell Extension", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Tricep Rope Extension", equip: "cable", diff: 1, secondary: [] },
-            { name: "Machine Tricep Extension", equip: "machine", diff: 1, secondary: [] },
-            { name: "Close Grip Bench Press", equip: "barbell", diff: 3, secondary: ["chest"] },
-            { name: "Skull Crushers", equip: "barbell", diff: 2, secondary: [] },
-        ],
-        home: [
-            { name: "Diamond Push-ups", equip: "bodyweight", diff: 2, secondary: ["chest"] },
-            { name: "Tricep Chair Dips", equip: "bodyweight", diff: 2, secondary: [] },
-        ],
-        stretching: [
-            { name: "Overhead Tricep Stretch", goal: "30 sec" },
-        ],
-        stats: { strength: 75, volume: 90 },
-        tips: [
-            "Keep elbows tucked to body.",
-            "Full range of motion.",
-            "Control the movement.",
-            "Squeeze triceps at the top.",
-            "No flaring elbows."
-        ],
-        mistakes: [
-            "Elbows flaring out.",
-            "Using momentum.",
-            "Too much weight.",
-            "Insufficient contraction.",
-            "Elbows moving away from body."
-        ]
-    },
-
-    forearms: {
-        title: "Forearms",
-        desc: "Muscles of forearm flexors and extensors. Important for grip strength and wrist stability. Often overlooked.",
-        risk: "Low Risk",
-        gym: [
-            { name: "Farmer's Walk", equip: "dumbbell", diff: 1, secondary: ["traps"] },
-            { name: "Wrist Curl", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Reverse Wrist Curl", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Cable Wrist Curl", equip: "cable", diff: 1, secondary: [] },
-            { name: "Dead Hang", equip: "bodyweight", diff: 1, secondary: ["lats", "biceps"] },
-            { name: "Barbell Wrist Curl", equip: "barbell", diff: 1, secondary: [] },
-            { name: "Plate Pinch Hold", equip: "dumbbell", diff: 2, secondary: [] },
-        ],
-        home: [
-            { name: "Pull-up Bar Hang", equip: "bodyweight", diff: 1, secondary: [] },
-        ],
-        stretching: [
-            { name: "Forearm Stretch (Palms Down)", goal: "20 sec" },
-            { name: "Forearm Stretch (Palms Up)", goal: "20 sec" },
-        ],
-        stats: { strength: 70, volume: 60 },
-        tips: [
-            "Squeeze hard for extended time.",
-            "Full range of motion.",
-            "Consistent practice for grip development.",
-            "Gradual progression.",
-            "Endurance training for forearms."
-        ],
-        mistakes: [
-            "Wrist strain from overload.",
-            "Insufficient range.",
-            "Ignoring grip strength.",
-            "Too much too soon.",
-            "Improper wrist position."
-        ]
-    },
-
-    abs: {
-        title: "Abdominals",
-        desc: "Core muscles including rectus abdominis and transverse abdominis. Responsible for flexion and rotation. Essential for stability.",
-        risk: "Low Risk",
-        gym: [
-            { name: "Cable Crunch", equip: "cable", diff: 1, secondary: [] },
-            { name: "Ab Crunch Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Hanging Leg Raise", equip: "bodyweight", diff: 3, secondary: [] },
-            { name: "Cable Wood Chop", equip: "cable", diff: 2, secondary: [] },
-            { name: "Ab Wheel Rollout", equip: "machine", diff: 3, secondary: [] },
-            { name: "Rope Crunch", equip: "cable", diff: 1, secondary: [] },
-            { name: "Machine Ab Crunch", equip: "machine", diff: 1, secondary: [] },
-        ],
-        home: [
-            { name: "Crunches", equip: "bodyweight", diff: 1, secondary: [] },
-            { name: "Plank", equip: "bodyweight", diff: 1, secondary: [] },
-            { name: "Vertical Leg Raise", equip: "bodyweight", diff: 2, secondary: [] },
-            { name: "Russian Twists", equip: "bodyweight", diff: 2, secondary: [] },
-            { name: "Bicycle Crunches", equip: "bodyweight", diff: 2, secondary: [] },
-        ],
-        stretching: [
-            { name: "Cobra Pose", goal: "30 sec" },
-        ],
-        stats: { strength: 80, volume: 75 },
-        tips: [
-            "Breathe during flexion and exhalation.",
-            "Avoid pulling on the neck.",
-            "Focus on contraction.",
-            "Slow and controlled movements.",
-            "Full range of motion."
-        ],
-        mistakes: [
-            "Pulling on neck.",
-            "Too fast movement.",
-            "Using momentum.",
-            "Insufficient range.",
-            "Not breathing properly."
-        ]
-    },
-
-    quads: {
-        title: "Quadriceps",
-        desc: "Four muscles on front of thigh. Largest leg muscle group. Crucial for leg strength and athletic performance.",
-        risk: "High Risk",
-        gym: [
-            { name: "Barbell Back Squat", equip: "barbell", diff: 3, secondary: ["glutes"] },
-            { name: "Barbell Front Squat", equip: "barbell", diff: 3, secondary: [] },
-            { name: "Leg Press", equip: "machine", diff: 2, secondary: ["glutes"] },
-            { name: "Bulgarian Split Squat", equip: "dumbbell", diff: 2, secondary: ["glutes"] },
-            { name: "Leg Extension Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Goblet Squat", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Smith Machine Squat", equip: "machine", diff: 2, secondary: [] },
-            { name: "V-Squat Machine", equip: "machine", diff: 2, secondary: [] },
-            { name: "Hack Squat", equip: "machine", diff: 2, secondary: [] },
-        ],
-        home: [
-            { name: "Bodyweight Squat", equip: "bodyweight", diff: 1, secondary: [] },
-            { name: "Pistol Squat", equip: "bodyweight", diff: 4, secondary: ["hamstrings"] },
-            { name: "Step-ups", equip: "bodyweight", diff: 2, secondary: ["glutes"] },
-        ],
-        stretching: [
-            { name: "Quadriceps Stretch", goal: "45 sec" },
-            { name: "Butterfly Stretch", goal: "60 sec" },
-        ],
-        stats: { strength: 100, volume: 95 },
-        tips: [
-            "Pressure through entire foot.",
-            "Knees should not exceed toes significantly.",
-            "Full range of motion.",
-            "Chest up, neutral spine.",
-            "Control the descent."
-        ],
-        mistakes: [
-            "Knees caving inward.",
-            "Rounded back.",
-            "Weight on toes instead of heels.",
-            "Insufficient depth.",
-            "Poor knee alignment."
-        ]
-    },
-
-    glutes: {
-        title: "Glutes",
-        desc: "Largest muscle in the body. Responsible for hip extension and jumping. Key for performance and aesthetics.",
-        risk: "Low Risk",
-        gym: [
-            { name: "Barbell Hip Thrust", equip: "barbell", diff: 2, secondary: ["hamstrings"] },
-            { name: "Dumbbell Hip Thrust", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Hip Thrust Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Barbell Romanian Deadlift", equip: "barbell", diff: 3, secondary: ["hamstrings"] },
-            { name: "Dumbbell Romanian Deadlift", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Leg Press", equip: "machine", diff: 2, secondary: ["quads"] },
-            { name: "Hip Abduction Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Cable Kickback", equip: "cable", diff: 1, secondary: [] },
-            { name: "Smith Machine Squat", equip: "machine", diff: 2, secondary: ["quads"] },
-        ],
-        home: [
-            { name: "Glute Bridge", equip: "bodyweight", diff: 1, secondary: [] },
-            { name: "Single-Leg Glute Bridge", equip: "bodyweight", diff: 2, secondary: [] },
-            { name: "Step-ups", equip: "bodyweight", diff: 2, secondary: ["quads"] },
-            { name: "Donkey Kicks", equip: "bodyweight", diff: 1, secondary: [] },
-        ],
-        stretching: [
-            { name: "Pigeon Pose", goal: "45 sec" },
-            { name: "Glute Stretch (Sitting)", goal: "30 sec" },
-        ],
-        stats: { strength: 100, volume: 85 },
-        tips: [
-            "Squeeze hard at the top.",
-            "Full hip extension.",
-            "Feel the burn in glutes.",
-            "Control the movement.",
-            "Mind the tempo."
-        ],
-        mistakes: [
-            "Excessive lower back arch.",
-            "Using quads instead of glutes.",
-            "Insufficient contraction.",
-            "Too much weight too soon.",
-            "Poor mind-muscle connection."
-        ]
-    },
-
-    hamstrings: {
-        title: "Hamstrings",
-        desc: "Back of thigh muscles. Critical for leg balance, knee stability, and injury prevention. Often underdeveloped.",
-        risk: "Medium Risk",
-        gym: [
-            { name: "Romanian Deadlift", equip: "barbell", diff: 3, secondary: ["lowerback"] },
-            { name: "Leg Curl Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Lying Leg Curl", equip: "machine", diff: 1, secondary: [] },
-            { name: "Seated Leg Curl", equip: "machine", diff: 1, secondary: [] },
-            { name: "Nordic Hamstring Curl", equip: "bodyweight", diff: 3, secondary: [] },
-            { name: "Dumbbell Romanian Deadlift", equip: "dumbbell", diff: 2, secondary: [] },
-            { name: "Good Morning", equip: "barbell", diff: 3, secondary: ["lowerback"] },
-            { name: "Glute-Ham Raise", equip: "machine", diff: 3, secondary: [] },
-        ],
-        home: [
-            { name: "Nordic Curl (Assisted)", equip: "bodyweight", diff: 2, secondary: [] },
-        ],
-        stretching: [
-            { name: "Forward Bend", goal: "45 sec" },
-            { name: "Seated Hamstring Stretch", goal: "45 sec" },
-        ],
-        stats: { strength: 85, volume: 80 },
-        tips: [
-            "Push hips back - key for proper form.",
-            "Maintain neutral spine.",
-            "Control the eccentric.",
-            "Full range of motion.",
-            "Proper breathing."
-        ],
-        mistakes: [
-            "Rounding the back.",
-            "Using lower back instead of hamstrings.",
-            "Insufficient range.",
-            "Too much weight.",
-            "Poor knee position."
-        ]
-    },
-
-    calves: {
-        title: "Calves",
-        desc: "Muscles on back of lower leg. Two main muscles: gastrocnemius and soleus. Often requires high reps for growth.",
-        risk: "Low Risk",
-        gym: [
-            { name: "Calf Press Machine", equip: "machine", diff: 1, secondary: [] },
-            { name: "Standing Calf Raise", equip: "machine", diff: 1, secondary: [] },
-            { name: "Seated Calf Raise", equip: "machine", diff: 1, secondary: [] },
-            { name: "Dumbbell Calf Raise", equip: "dumbbell", diff: 1, secondary: [] },
-            { name: "Barbell Calf Raise", equip: "barbell", diff: 1, secondary: [] },
-            { name: "Smith Machine Calf Raise", equip: "machine", diff: 1, secondary: [] },
-            { name: "Leg Press Calf Raise", equip: "machine", diff: 1, secondary: [] },
-        ],
-        home: [
-            { name: "Bodyweight Calf Raise", equip: "bodyweight", diff: 1, secondary: [] },
-            { name: "Single-Leg Calf Raise", equip: "bodyweight", diff: 2, secondary: [] },
-        ],
-        stretching: [
-            { name: "Wall Calf Stretch", goal: "30 sec" },
-            { name: "Stair Calf Stretch", goal: "30 sec" },
-        ],
-        stats: { strength: 70, volume: 50 },
-        tips: [
-            "Full range of motion is critical.",
-            "High reps and volume for growth.",
-            "Hold peak contraction.",
-            "Control the descent.",
-            "Stretch between sets."
-        ],
-        mistakes: [
-            "Bouncing/using momentum.",
-            "Insufficient range of motion.",
-            "Too low volume.",
-            "Not achieving deep stretch.",
-            "Poor mind-muscle connection."
-        ]
-    }
-};
-
-// --- CORE FUNCTIONS ---
-
-function selectMuscle(mId) {
-    currentMuscle = mId;
-    updateUI();
-}
-
-function updateUI() {
-    const m = data[currentMuscle];
-    if (!m) return;
-
-    resetModelColors();
-    applyFatigueStyles();
-    highlightBodyParts(currentMuscle, 'active-muscle');
-
-    const calcContainer = document.getElementById('calculator-container');
-    if (calcContainer) {
-        calcContainer.style.display = (currentMode === 'gym') ? 'block' : 'none';
-    }
-
-    const infoCard = document.getElementById('info-card');
-    const extraCard = document.getElementById('extra-info');
-    const statsCard = document.getElementById('stats-container');
-    const riskBadge = document.getElementById('risk-badge');
-
-    infoCard.style.display = 'none';
-    extraCard.style.display = 'none';
-    statsCard.style.display = 'none';
-
-    riskBadge.innerText = m.risk;
-    riskBadge.style.background = m.risk.includes("High") ? "#ff4
+            { 
+                en: "Pull-ups",
+                bg: "Набирания",
+                equip: "bodyweight", diff: 3, secondary: ["biceps"] 
+            },
+            { 
+                en: "Weighted Pull-ups",
+                bg: "Набирания с утежняване",
+                equip: "bodyweight", diff: 4, secondary: ["biceps"] 
+            },
+            { 
