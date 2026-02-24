@@ -97,3 +97,19 @@
     <script src="script.js"></script>
 </body>
 </html>
+<div class="equipment-filters">
+    <button class="filter-btn active" onclick="filterEquip('all')">Всички</button>
+    <button class="filter-btn" onclick="filterEquip('barbell')">Лост</button>
+    <button class="filter-btn" onclick="filterEquip('dumbbell')">Дъмбели</button>
+    <button class="filter-btn" onclick="filterEquip('bodyweight')">Собствено тегло</button>
+</div>
+
+<div id="calculator-container" class="stats-card" style="display:none;">
+    <h3>Калкулатор Максимална Сила (1RM)</h3>
+    <div class="calc-inputs">
+        <input type="number" id="calc-weight" placeholder="кг">
+        <input type="number" id="calc-reps" placeholder="повт.">
+        <button onclick="calculate1RM()">СМЕТНИ</button>
+    </div>
+    <p id="1rm-result">Твоят 1RM: -- кг</p>
+</div>
