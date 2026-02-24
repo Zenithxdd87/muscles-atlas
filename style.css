@@ -58,6 +58,11 @@ body {
     margin-bottom: 20px;
 }
 
+.header-controls {
+    display: flex;
+    gap: 10px;
+}
+
 .logo {
     font-size: 18px;
     font-weight: bold;
@@ -68,16 +73,16 @@ body {
     color: var(--primary); 
 }
 
-#theme-toggle {
+#theme-toggle, #lang-toggle {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     transition: 0.3s;
     padding: 5px;
 }
 
-#theme-toggle:hover {
+#theme-toggle:hover, #lang-toggle:hover {
     transform: rotate(20deg);
 }
 
