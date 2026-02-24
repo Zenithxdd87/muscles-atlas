@@ -1,3 +1,4 @@
+
 :root {
     --bg-app: #080808;
     --bg-sidebar: #000;
@@ -274,14 +275,24 @@ body {
     background: rgba(0, 210, 255, 0.05);
 }
 
-.exercise-item span:first-child {
+.exercise-name {
     flex: 1;
 }
 
-.exercise-item span:last-child {
+.tag {
     margin-left: 10px;
     font-weight: bold;
     color: var(--accent);
+    font-size: 11px;
+}
+
+.difficulty {
+    margin-left: 8px;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
 }
 
 .active-ex { 
