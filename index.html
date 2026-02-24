@@ -26,37 +26,31 @@
                         <!-- Head -->
                         <circle cx="100" cy="30" r="20" fill="#d4a574"/>
                         <!-- Neck -->
-                        <rect x="95" y="50" width="10" height="15" fill="#d4a574"/>
-                        <!-- Chest -->
-                        <path id="chest" class="muscle-segment" d="M72,70 Q100,60 128,70 L125,110 Q100,118 75,110 Z" onclick="selectMuscle('chest')" />
+                        <rect x="95" y="50" width="10" height="16" fill="#d4a574"/>
+                        <!-- Upper torso / Chest -->
+                        <rect id="chest" class="muscle-segment" x="70" y="66" width="60" height="55" rx="10" onclick="selectMuscle('chest')" />
                         <!-- Traps Front -->
-                        <path id="traps_front" class="muscle-segment" d="M90,60 L110,60 L108,75 L92,75 Z" onclick="selectMuscle('traps')" />
-                        <!-- Front Shoulders Left -->
-                        <path id="shoulders_front_l" class="muscle-segment" d="M55,75 Q50,70 65,68 L70,85 Q65,82 60,82 Z" onclick="selectMuscle('shoulders_front')" />
-                        <!-- Front Shoulders Right -->
-                        <path id="shoulders_front_r" class="muscle-segment" d="M145,75 Q150,70 135,68 L130,85 Q135,82 140,82 Z" onclick="selectMuscle('shoulders_front')" />
-                        <!-- Side Shoulders Left -->
-                        <path id="shoulders_side_l" class="muscle-segment" d="M50,85 Q40,95 45,110 L55,100 Z" onclick="selectMuscle('shoulders_side')" />
-                        <!-- Side Shoulders Right -->
-                        <path id="shoulders_side_r" class="muscle-segment" d="M150,85 Q160,95 155,110 L145,100 Z" onclick="selectMuscle('shoulders_side')" />
+                        <path id="traps_front" class="muscle-segment" d="M80,60 H120 L130,70 L70,70 Z" onclick="selectMuscle('traps')" />
+                        <!-- Front delts (more anterior) -->
+                        <path id="shoulders_front_l" class="muscle-segment" d="M55,70 Q60,60 72,66 Q72,86 60,90 Q54,82 55,70 Z" onclick="selectMuscle('shoulders_front')" />
+                        <path id="shoulders_front_r" class="muscle-segment" d="M145,70 Q140,60 128,66 Q128,86 140,90 Q146,82 145,70 Z" onclick="selectMuscle('shoulders_front')" />
+                        <!-- Side delts (more lateral) -->
+                        <path id="shoulders_side_l" class="muscle-segment" d="M42,80 Q50,70 60,80 Q62,95 54,105 Q44,98 42,80 Z" onclick="selectMuscle('shoulders_side')" />
+                        <path id="shoulders_side_r" class="muscle-segment" d="M158,80 Q150,70 140,80 Q138,95 146,105 Q156,98 158,80 Z" onclick="selectMuscle('shoulders_side')" />
                         <!-- Abs -->
-                        <path id="abs" class="muscle-segment" d="M75,115 L125,115 L122,170 L78,170 Z" onclick="selectMuscle('abs')" />
-                        <!-- Biceps Left -->
-                        <path id="biceps_l" class="muscle-segment" d="M50,85 Q43,115 48,145 L62,140 Q65,115 65,85 Z" onclick="selectMuscle('biceps')" />
-                        <!-- Biceps Right -->
-                        <path id="biceps_r" class="muscle-segment" d="M150,85 Q157,115 152,145 L138,140 Q135,115 135,85 Z" onclick="selectMuscle('biceps')" />
-                        <!-- Forearms Left -->
-                        <path id="forearms_l" class="muscle-segment" d="M48,150 Q42,180 50,210 L65,205 Q70,180 62,145 Z" onclick="selectMuscle('forearms')" />
-                        <!-- Forearms Right -->
-                        <path id="forearms_r" class="muscle-segment" d="M152,150 Q158,180 150,210 L135,205 Q130,180 138,145 Z" onclick="selectMuscle('forearms')" />
-                        <!-- Quads Left -->
-                        <path id="quads_l" class="muscle-segment" d="M72,175 Q82,180 88,240 L82,295 Q70,290 68,240 Z" onclick="selectMuscle('quads')" />
-                        <!-- Quads Right -->
-                        <path id="quads_r" class="muscle-segment" d="M128,175 Q118,180 112,240 L118,295 Q130,290 132,240 Z" onclick="selectMuscle('quads')" />
-                        <!-- Calves Left -->
-                        <path id="calves_l" class="muscle-segment" d="M72,300 L82,300 L80,360 L70,360 Z" onclick="selectMuscle('calves')" />
-                        <!-- Calves Right -->
-                        <path id="calves_r" class="muscle-segment" d="M118,300 L128,300 L130,360 L120,360 Z" onclick="selectMuscle('calves')" />
+                       <rect id="abs" class="muscle-segment" x="78" y="125" width="44" height="55" rx="8" onclick="selectMuscle('abs')" />
+                        <!-- Biceps -->
+                        <path id="biceps_l" class="muscle-segment" d="M52,95 Q45,120 50,150 Q58,150 64,145 Q64,115 60,95 Z" onclick="selectMuscle('biceps')" />
+                        <path id="biceps_r" class="muscle-segment" d="M148,95 Q155,120 150,150 Q142,150 136,145 Q136,115 140,95 Z" onclick="selectMuscle('biceps')" />
+                        <!-- Forearms -->
+                        <path id="forearms_l" class="muscle-segment" d="M50,155 Q44,185 52,215 L64,210 Q70,185 62,152 Z" onclick="selectMuscle('forearms')" />
+                        <path id="forearms_r" class="muscle-segment" d="M150,155 Q156,185 148,215 L136,210 Q130,185 138,152 Z" onclick="selectMuscle('forearms')" />
+                        <!-- Quads -->
+                        <path id="quads_l" class="muscle-segment" d="M78,185 Q85,190 90,245 L84,300 Q72,295 70,245 Z" onclick="selectMuscle('quads')" />
+                        <path id="quads_r" class="muscle-segment" d="M122,185 Q115,190 110,245 L116,300 Q128,295 130,245 Z" onclick="selectMuscle('quads')" />
+                        <!-- Calves -->
+                        <path id="calves_l" class="muscle-segment" d="M74,305 L86,305 L84,360 L72,360 Z" onclick="selectMuscle('calves')" />
+                        <path id="calves_r" class="muscle-segment" d="M114,305 L126,305 L128,360 L116,360 Z" onclick="selectMuscle('calves')" />
                     </svg>
                 </div>
                 <div class="view-container">
@@ -65,33 +59,28 @@
                         <!-- Head -->
                         <circle cx="100" cy="30" r="20" fill="#d4a574"/>
                         <!-- Neck -->
-                        <rect x="95" y="50" width="10" height="15" fill="#d4a574"/>
+                       <rect x="95" y="50" width="10" height="16" fill="#d4a574"/>
                         <!-- Traps -->
-                        <path id="traps" class="muscle-segment" d="M85,60 L115,60 L130,80 L70,80 Z" onclick="selectMuscle('traps')" />
-                        <!-- Rear Shoulders Left -->
-                        <path id="shoulders_rear_l" class="muscle-segment" d="M50,85 Q40,100 55,110 L60,95 Z" onclick="selectMuscle('shoulders_rear')" />
-                        <!-- Rear Shoulders Right -->
-                        <path id="shoulders_rear_r" class="muscle-segment" d="M150,85 Q160,100 145,110 L140,95 Z" onclick="selectMuscle('shoulders_rear')" />
-                        <!-- Lats Left -->
-                        <path id="lats_l" class="muscle-segment" d="M60,90 Q55,130 65,170 L80,165 Q85,130 75,90 Z" onclick="selectMuscle('lats')" />
-                        <!-- Lats Right -->
-                        <path id="lats_r" class="muscle-segment" d="M140,90 Q145,130 135,170 L120,165 Q115,130 125,90 Z" onclick="selectMuscle('lats')" />
+                        <path id="traps" class="muscle-segment" d="M80,60 H120 L132,78 L68,78 Z" onclick="selectMuscle('traps')" />
+                        <!-- Rear delts (upper outer) -->
+                        <path id="shoulders_rear_l" class="muscle-segment" d="M52,78 Q44,90 56,105 L64,92 Z" onclick="selectMuscle('shoulders_rear')" />
+                        <path id="shoulders_rear_r" class="muscle-segment" d="M148,78 Q156,90 144,105 L136,92 Z" onclick="selectMuscle('shoulders_rear')" />
+                        <!-- Lats -->
+                        <path id="lats_l" class="muscle-segment" d="M64,85 Q56,130 66,175 L82,168 Q88,130 78,85 Z" onclick="selectMuscle('lats')" />
+                        <path id="lats_r" class="muscle-segment" d="M136,85 Q144,130 134,175 L118,168 Q112,130 122,85 Z" onclick="selectMuscle('lats')" />
                         <!-- Lower Back -->
-                        <path id="lowerback" class="muscle-segment" d="M75,170 L125,170 L120,220 L80,220 Z" onclick="selectMuscle('lowerback')" />
-                        <!-- Triceps Left -->
-                        <path id="triceps_l" class="muscle-segment" d="M50,85 Q40,125 52,155 L65,145 Q68,125 65,85 Z" onclick="selectMuscle('triceps')" />
-                        <!-- Triceps Right -->
-                        <path id="triceps_r" class="muscle-segment" d="M150,85 Q160,125 148,155 L135,145 Q132,125 135,85 Z" onclick="selectMuscle('triceps')" />
+                         <rect id="lowerback" class="muscle-segment" x="78" y="178" width="44" height="48" rx="8" onclick="selectMuscle('lowerback')" />
+                        <!-- Triceps -->
+                        <path id="triceps_l" class="muscle-segment" d="M52,90 Q44,130 54,165 L66,155 Q70,130 66,90 Z" onclick="selectMuscle('triceps')" />
+                        <path id="triceps_r" class="muscle-segment" d="M148,90 Q156,130 146,165 L134,155 Q130,130 134,90 Z" onclick="selectMuscle('triceps')" />
                         <!-- Glutes -->
-                        <path id="glutes" class="muscle-segment" d="M72,220 Q100,215 128,220 Q135,260 100,265 Q65,265 72,220 Z" onclick="selectMuscle('glutes')" />
-                        <!-- Hamstrings Left -->
-                        <path id="hamstrings_l" class="muscle-segment" d="M72,270 L88,270 L85,310 L70,310 Z" onclick="selectMuscle('hamstrings')" />
-                        <!-- Hamstrings Right -->
-                        <path id="hamstrings_r" class="muscle-segment" d="M112,270 L128,270 L130,310 L115,310 Z" onclick="selectMuscle('hamstrings')" />
-                        <!-- Calves Left -->
-                        <path id="calves_back_l" class="muscle-segment" d="M72,315 L85,315 L82,375 L70,375 Z" onclick="selectMuscle('calves')" />
-                        <!-- Calves Right -->
-                        <path id="calves_back_r" class="muscle-segment" d="M115,315 L128,315 L130,375 L118,375 Z" onclick="selectMuscle('calves')" />
+                        <path id="glutes" class="muscle-segment" d="M72,225 Q100,218 128,225 Q134,265 100,272 Q66,265 72,225 Z" onclick="selectMuscle('glutes')" />
+                        <!-- Hamstrings -->
+                        <path id="hamstrings_l" class="muscle-segment" d="M74,275 L88,275 L86,315 L72,315 Z" onclick="selectMuscle('hamstrings')" />
+                        <path id="hamstrings_r" class="muscle-segment" d="M112,275 L126,275 L128,315 L114,315 Z" onclick="selectMuscle('hamstrings')" />
+                        <!-- Calves -->
+                        <path id="calves_back_l" class="muscle-segment" d="M74,320 L88,320 L86,375 L72,375 Z" onclick="selectMuscle('calves')" />
+                        <path id="calves_back_r" class="muscle-segment" d="M112,320 L126,320 L128,375 L114,375 Z" onclick="selectMuscle('calves')" />
                     </svg>
                 </div>
             </div>
